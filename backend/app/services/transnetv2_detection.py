@@ -11,18 +11,23 @@ import cv2
 import numpy as np
 import torch
 
-from app.core.config import LOW_MEMORY_MODE, TRANSNETV2_DEVICE, TRANSNETV2_THRESHOLD
+from app.core.config import (
+    TRANSNETV2_CPU_THREADS,
+    TRANSNETV2_DEVICE,
+    TRANSNETV2_THRESHOLD,
+    TRANSNETV2_WINDOW_SIZE,
+)
 
 
 SceneProgressCallback = Callable[[float, str, int | None, int | None], None]
 
-# Standard TransNet inference uses 100 frames and emits the middle 50. On a
-# 512 MB instance, the 3D-convolution workspace for that window can cross the
-# memory limit. A 50-frame window with 12/13 frames of context emits 25 frames
-# and keeps the same overlap pattern with a much smaller activation peak.
-_WINDOW_SIZE = 50 if LOW_MEMORY_MODE else 100
-_START_PADDING = 12 if LOW_MEMORY_MODE else 25
-_OUTPUT_FRAMES = 25 if LOW_MEMORY_MODE else 50
+# Standard TransNet inference uses 100 frames and emits the middle 50. The same
+# centered overlap works for a smaller configured window while bounding every
+# 3D-convolution activation independently of the video's duration. The 25-frame
+# default has 6 frames of context on each side and emits 13 new predictions.
+_WINDOW_SIZE = TRANSNETV2_WINDOW_SIZE
+_OUTPUT_FRAMES = (_WINDOW_SIZE + 1) // 2
+_START_PADDING = (_WINDOW_SIZE - _OUTPUT_FRAMES) // 2
 _OUTPUT_SLICE = slice(_START_PADDING, _START_PADDING + _OUTPUT_FRAMES)
 
 
@@ -76,12 +81,13 @@ def _load_model() -> torch.nn.Module:
     except Exception as error:
         raise RuntimeError(f"TransNetV2 is unavailable: {error}") from error
 
-    if LOW_MEMORY_MODE:
-        # Thread pools allocate per-thread workspaces. One CPU thread is both
-        # safer on a 512 MB instance and appropriate for Render's shared CPU.
-        torch.set_num_threads(1)
+    if _device().type == "cpu":
+        # CPU thread pools allocate one convolution workspace per thread. Keep
+        # that multiplier explicit and safe even if Render environment
+        # detection or LOW_MEMORY_MODE is accidentally overridden.
+        torch.set_num_threads(TRANSNETV2_CPU_THREADS)
         try:
-            torch.set_num_interop_threads(1)
+            torch.set_num_interop_threads(TRANSNETV2_CPU_THREADS)
         except RuntimeError:
             # PyTorch only permits setting this once per process.
             pass
@@ -130,7 +136,9 @@ def _predict_window(
         tensor = torch.from_numpy(window).to(device)
         single_frame_logits, _ = model(tensor)
         probabilities = torch.sigmoid(single_frame_logits)[0, _OUTPUT_SLICE, 0]
-        result = probabilities.cpu().numpy()
+        # Copy the small output so NumPy does not retain the PyTorch tensor's
+        # backing storage after this window has finished.
+        result = probabilities.cpu().numpy().copy()
         del probabilities, single_frame_logits, tensor
         return result
 
@@ -140,11 +148,11 @@ def _stream_cut_probabilities(
     estimated_frame_count: int,
     progress_callback: SceneProgressCallback | None,
 ) -> tuple[np.ndarray, np.ndarray | None]:
-    """Run overlapping TransNet windows while keeping at most 100 frames.
+    """Run overlapping TransNet windows with a fixed memory ceiling.
 
-    The previous implementation decoded the entire reel into a NumPy array
-    before inference. Standard mode preserves TransNet's 25/50/25 layout;
-    low-memory mode uses the proportional 12/25/13 layout. Both keep memory
+    The previous implementation decoded the entire reel into a NumPy array.
+    This implementation retains only one configured window, emits its centered
+    predictions, and advances by that output count. Memory therefore remains
     bounded independently of reel length.
     """
     if progress_callback:

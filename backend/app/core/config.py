@@ -51,18 +51,39 @@ CORS_ORIGINS = [
     if origin.strip()
 ]
 
-# Render's 512 MB instances cannot safely keep TransNetV2 and a medium YOLO
-# model resident together. Render sets RENDER=true automatically, so hosted
-# deployments get bounded-memory defaults while local/high-memory deployments
-# retain the higher-quality settings. Set LOW_MEMORY_MODE explicitly to override.
+# Render's 512 MB instances cannot safely use the local-quality defaults.
+# Depending on the service/runtime generation, Render may expose either its
+# boolean flag or only service-specific variables, so recognize both forms.
+_running_on_render = (
+    os.getenv("RENDER", "false").lower() == "true"
+    or any(
+        os.getenv(variable_name)
+        for variable_name in (
+            "RENDER_SERVICE_ID",
+            "RENDER_EXTERNAL_URL",
+            "RENDER_EXTERNAL_HOSTNAME",
+        )
+    )
+)
 LOW_MEMORY_MODE = os.getenv(
-    "LOW_MEMORY_MODE", os.getenv("RENDER", "false")
+    "LOW_MEMORY_MODE", "true" if _running_on_render else "false"
 ).lower() == "true"
 
 # ---------------------------------------------------------------- scene cuts
 SCENE_DETECTION_METHOD = os.getenv("SCENE_DETECTION_METHOD", "transnetv2")
 TRANSNETV2_THRESHOLD = float(os.getenv("TRANSNETV2_THRESHOLD", "0.5"))
 TRANSNETV2_DEVICE = os.getenv("TRANSNETV2_DEVICE", "auto")
+# TransNetV2 was trained with 100-frame windows, but that activation footprint
+# is not viable inside a 512 MB web service. Keep the streaming window small by
+# default on every host instead of relying on provider-specific environment
+# detection. Higher-memory local deployments can explicitly raise this to 50
+# or 100; the value is bounded so a typo cannot create an unbounded allocation.
+TRANSNETV2_WINDOW_SIZE = max(
+    8, min(100, int(os.getenv("TRANSNETV2_WINDOW_SIZE", "25")))
+)
+TRANSNETV2_CPU_THREADS = max(
+    1, int(os.getenv("TRANSNETV2_CPU_THREADS", "1"))
+)
 
 SCENE_SAMPLE_EVERY_N_FRAMES = 5
 SCENE_DIFF_THRESHOLD = 0.45

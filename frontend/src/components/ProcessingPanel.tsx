@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type {
   ProcessingStageProgress,
   ProcessingStageStatus,
@@ -57,6 +58,31 @@ function StageIcon({ status }: { status: ProcessingStageStatus }) {
     );
   }
   return <span className="h-3.5 w-3.5 rounded border border-current opacity-50" />;
+}
+
+function AnimatedFrameCount({ value }: { value: number }) {
+  const [displayedValue, setDisplayedValue] = useState(value);
+
+  useEffect(() => {
+    setDisplayedValue((current) => Math.min(current, value));
+    const intervalId = window.setInterval(() => {
+      setDisplayedValue((current) => {
+        if (current >= value) {
+          window.clearInterval(intervalId);
+          return current;
+        }
+        return current + 1;
+      });
+    }, 24);
+    return () => window.clearInterval(intervalId);
+  }, [value]);
+
+  return (
+    <>
+      <span aria-hidden="true">{displayedValue}</span>
+      <span className="sr-only">{value}</span>
+    </>
+  );
 }
 
 export function ProcessingPanel({
@@ -119,7 +145,12 @@ export function ProcessingPanel({
                   stage.total_items != null &&
                   stage.total_items > 0 && (
                     <span className="ml-1 tabular-nums opacity-80">
-                      {stage.completed_items}/{stage.total_items}
+                      {stage.key === "scene_cuts" ? (
+                        <AnimatedFrameCount value={stage.completed_items} />
+                      ) : (
+                        stage.completed_items
+                      )}
+                      /{stage.total_items}
                     </span>
                   )}
               </span>
