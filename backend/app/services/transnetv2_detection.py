@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ctypes
 import gc
+import importlib.util
 from functools import lru_cache
 from pathlib import Path
 from typing import Callable
@@ -36,19 +37,32 @@ def _load_model() -> torch.nn.Module:
     """Load TransNet without importing its module-level singleton.
 
     ``transnetv2pt.inference`` constructs a global model at import time. That
-    global survives ``lru_cache.clear()`` and used to overlap with YOLO for the
-    rest of the request. Constructing the architecture directly gives this app
-    full control over the model lifetime.
+    module is also imported by ``transnetv2pt.__init__``, so even a seemingly
+    harmless ``import transnetv2pt`` creates one hidden model before this app
+    can construct its own. Load the architecture file directly, without
+    executing the package initializer, to keep exactly one model resident.
     """
     try:
-        import transnetv2pt
-        from transnetv2pt.transnetv2_pytorch import TransNetV2
-
-        weights_path = (
-            Path(transnetv2pt.__file__).resolve().parent
-            / "transnetv2-pytorch-weights.pth"
+        package_spec = importlib.util.find_spec("transnetv2pt")
+        if package_spec is None or package_spec.submodule_search_locations is None:
+            raise ImportError("Could not locate the transnetv2pt package")
+        package_directory = Path(next(iter(package_spec.submodule_search_locations)))
+        architecture_path = package_directory / "transnetv2_pytorch.py"
+        architecture_spec = importlib.util.spec_from_file_location(
+            "_footee_transnetv2_architecture",
+            architecture_path,
         )
-        model = TransNetV2()
+        if architecture_spec is None or architecture_spec.loader is None:
+            raise ImportError("Could not load the TransNetV2 architecture")
+        architecture_module = importlib.util.module_from_spec(architecture_spec)
+        architecture_spec.loader.exec_module(architecture_module)
+
+        # A normal constructor first allocates randomly initialized parameters,
+        # then load_state_dict replaces them with the checkpoint. Constructing
+        # on the meta device avoids holding both parameter sets at once.
+        with torch.device("meta"):
+            model = architecture_module.TransNetV2()
+        weights_path = package_directory / "transnetv2-pytorch-weights.pth"
         state_dict = torch.load(
             weights_path,
             map_location="cpu",
