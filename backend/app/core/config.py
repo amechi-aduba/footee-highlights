@@ -51,6 +51,14 @@ CORS_ORIGINS = [
     if origin.strip()
 ]
 
+# Render's 512 MB instances cannot safely keep TransNetV2 and a medium YOLO
+# model resident together. Render sets RENDER=true automatically, so hosted
+# deployments get bounded-memory defaults while local/high-memory deployments
+# retain the higher-quality settings. Set LOW_MEMORY_MODE explicitly to override.
+LOW_MEMORY_MODE = os.getenv(
+    "LOW_MEMORY_MODE", os.getenv("RENDER", "false")
+).lower() == "true"
+
 # ---------------------------------------------------------------- scene cuts
 SCENE_DETECTION_METHOD = os.getenv("SCENE_DETECTION_METHOD", "transnetv2")
 TRANSNETV2_THRESHOLD = float(os.getenv("TRANSNETV2_THRESHOLD", "0.5"))
@@ -68,7 +76,9 @@ SCENE_STRONG_CUT_MIN_EDGE_DIFF = 0.0
 SCENE_HSV_DIFF_WEIGHT = 0.75
 SCENE_EDGE_DIFF_WEIGHT = 0.25
 SCENE_REFINE_WINDOW_FRAMES = 8
-SCENE_OBJECT_LAYOUT_ENABLED = os.getenv("SCENE_OBJECT_LAYOUT_ENABLED", "true").lower() == "true"
+SCENE_OBJECT_LAYOUT_ENABLED = os.getenv(
+    "SCENE_OBJECT_LAYOUT_ENABLED", "false" if LOW_MEMORY_MODE else "true"
+).lower() == "true"
 SCENE_OBJECT_LAYOUT_SAMPLE_EVERY_N_FRAMES = int(
     os.getenv("SCENE_OBJECT_LAYOUT_SAMPLE_EVERY_N_FRAMES", "30")
 )
@@ -85,8 +95,12 @@ SCENE_OBJECT_LAYOUT_MIN_SEGMENT_SECONDS = float(
 SEGMENT_START_TRIM_SECONDS = float(os.getenv("SEGMENT_START_TRIM_SECONDS", "0.30"))
 # Second-pass visual cut scan, merged with TransNetV2 cuts. Catches hard cuts
 # between visually similar plays (same pitch/camera) that TransNetV2 misses.
-SCENE_SECOND_PASS_ENABLED = os.getenv("SCENE_SECOND_PASS_ENABLED", "true").lower() == "true"
-SCENE_SECOND_PASS_DOWNSCALE_WIDTH = int(os.getenv("SCENE_SECOND_PASS_DOWNSCALE_WIDTH", "480"))
+SCENE_SECOND_PASS_ENABLED = os.getenv(
+    "SCENE_SECOND_PASS_ENABLED", "false" if LOW_MEMORY_MODE else "true"
+).lower() == "true"
+SCENE_SECOND_PASS_DOWNSCALE_WIDTH = int(
+    os.getenv("SCENE_SECOND_PASS_DOWNSCALE_WIDTH", "360" if LOW_MEMORY_MODE else "480")
+)
 # Seamless-cut detection via camera registration: two plays minutes apart at the
 # SAME camera angle can look near-identical to color/edge histograms (identity-
 # blind), so the clips get merged. But optical-flow registration between the two
@@ -98,21 +112,28 @@ SCENE_MOTION_CUT_MIN_HSV_DIFF = float(os.getenv("SCENE_MOTION_CUT_MIN_HSV_DIFF",
 
 # Gameplay-vs-cutaway segment classification (intros, title cards, celebrations).
 SEGMENT_FILTER_ENABLED = os.getenv("SEGMENT_FILTER_ENABLED", "true").lower() == "true"
-SEGMENT_CLASSIFY_SAMPLES = int(os.getenv("SEGMENT_CLASSIFY_SAMPLES", "3"))
+SEGMENT_CLASSIFY_SAMPLES = int(
+    os.getenv("SEGMENT_CLASSIFY_SAMPLES", "2" if LOW_MEMORY_MODE else "3")
+)
 SEGMENT_GRASS_FRACTION_MIN = float(os.getenv("SEGMENT_GRASS_FRACTION_MIN", "0.12"))
 SEGMENT_GAMEPLAY_MIN_PLAYERS = int(os.getenv("SEGMENT_GAMEPLAY_MIN_PLAYERS", "3"))
+SEGMENT_FILTER_USE_PLAYER_MODEL = os.getenv(
+    "SEGMENT_FILTER_USE_PLAYER_MODEL", "false" if LOW_MEMORY_MODE else "true"
+).lower() == "true"
 
 # ---------------------------------------------------------------- models
 FOOTBALL_MODEL_PATH = MODELS_DIR / "football-yolo11m.pt"
 FOOTBALL_TRACKING_MODEL_PATH = MODELS_DIR / "football-yolo11n.pt"
-YOLO11_PRETRAINED_PATH = BACKEND_DIR / "yolo11m.pt"
+YOLO11_PRETRAINED_PATH = BACKEND_DIR / (
+    "yolo11n.pt" if LOW_MEMORY_MODE else "yolo11m.pt"
+)
 _configured_yolo_model = os.getenv("YOLO_MODEL_PATH")
 if _configured_yolo_model:
     _configured_path = Path(_configured_yolo_model)
     YOLO_MODEL_PATH = str(
         _configured_path if _configured_path.is_absolute() else BACKEND_DIR / _configured_path
     )
-elif FOOTBALL_MODEL_PATH.exists():
+elif FOOTBALL_MODEL_PATH.exists() and not LOW_MEMORY_MODE:
     YOLO_MODEL_PATH = str(FOOTBALL_MODEL_PATH)
 else:
     YOLO_MODEL_PATH = str(YOLO11_PRETRAINED_PATH)
@@ -138,13 +159,17 @@ REID_MODEL_PATH = os.getenv("REID_MODEL_PATH", str(MODELS_DIR / "osnet_x0_25.pth
 REID_INPUT_HEIGHT = int(os.getenv("REID_INPUT_HEIGHT", "256"))
 REID_INPUT_WIDTH = int(os.getenv("REID_INPUT_WIDTH", "128"))
 REID_EMBED_DIM = int(os.getenv("REID_EMBED_DIM", "512"))
-REID_BATCH_SIZE = int(os.getenv("REID_BATCH_SIZE", "32"))
+REID_BATCH_SIZE = int(os.getenv("REID_BATCH_SIZE", "8" if LOW_MEMORY_MODE else "32"))
 
 # ---------------------------------------------------------------- legacy greedy tracker
 TRACKER_CONFIG = os.getenv("TRACKER_CONFIG", "bytetrack.yaml")
 TRACKING_CONFIDENCE_THRESHOLD = float(os.getenv("TRACKING_CONFIDENCE_THRESHOLD", "0.15"))
-TRACKING_FRAME_STRIDE = max(1, int(os.getenv("TRACKING_FRAME_STRIDE", "2")))
-TRACKING_IMAGE_SIZE = int(os.getenv("TRACKING_IMAGE_SIZE", "640"))
+TRACKING_FRAME_STRIDE = max(
+    1, int(os.getenv("TRACKING_FRAME_STRIDE", "3" if LOW_MEMORY_MODE else "2"))
+)
+TRACKING_IMAGE_SIZE = int(
+    os.getenv("TRACKING_IMAGE_SIZE", "512" if LOW_MEMORY_MODE else "640")
+)
 TRACKING_REID_MAX_CANDIDATES = max(1, int(os.getenv("TRACKING_REID_MAX_CANDIDATES", "3")))
 TRACKING_MAX_MISSING_FRAMES = int(os.getenv("TRACKING_MAX_MISSING_FRAMES", "20"))
 TRACKING_MAX_PREDICTION_FRAMES = int(os.getenv("TRACKING_MAX_PREDICTION_FRAMES", "12"))
@@ -179,7 +204,9 @@ TRACKING_ENGINE = os.getenv("TRACKING_ENGINE", "tracklet")
 
 DETECTION_CACHE_ENABLED = os.getenv("DETECTION_CACHE_ENABLED", "true").lower() == "true"
 DETECTION_CACHE_STRIDE = max(1, int(os.getenv("DETECTION_CACHE_STRIDE", "2")))
-TRACKING_BATCH_SIZE = max(1, int(os.getenv("TRACKING_BATCH_SIZE", "8")))
+TRACKING_BATCH_SIZE = max(
+    1, int(os.getenv("TRACKING_BATCH_SIZE", "1" if LOW_MEMORY_MODE else "8"))
+)
 
 # Camera motion compensation (full-affine, BoT-SORT GMC style).
 CAMERA_MOTION_ENABLED = os.getenv("CAMERA_MOTION_ENABLED", "true").lower() == "true"

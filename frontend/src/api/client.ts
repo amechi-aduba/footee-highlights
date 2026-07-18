@@ -6,6 +6,7 @@ import type {
   PlayerInfo,
   PlayerProfile,
   VideoAnalysisResult,
+  VideoProcessingProgress,
   VideoUploadResponse,
 } from "../types/analysis";
 
@@ -35,6 +36,16 @@ export async function processVideo(videoId: string): Promise<VideoAnalysisResult
   return readResponse(
     await fetch(`${API_BASE_URL}/api/videos/${videoId}/process`, {
       method: "POST",
+    }),
+  );
+}
+
+export async function getProcessingProgress(
+  videoId: string,
+): Promise<VideoProcessingProgress> {
+  return readResponse(
+    await fetch(`${API_BASE_URL}/api/videos/${videoId}/processing-progress`, {
+      cache: "no-store",
     }),
   );
 }

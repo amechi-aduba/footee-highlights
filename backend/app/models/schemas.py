@@ -14,6 +14,23 @@ class VideoUploadResponse(BaseModel):
     message: str
 
 
+class ProcessingStageProgress(BaseModel):
+    key: str
+    label: str
+    status: str
+    progress_percent: float
+    completed_items: int
+    total_items: int | None = None
+
+
+class VideoProcessingProgressResponse(BaseModel):
+    status: str
+    progress_percent: float
+    current_stage: str | None = None
+    message: str
+    stages: list[ProcessingStageProgress]
+
+
 class VideoMetadata(BaseModel):
     fps: float
     frame_count: int

@@ -1,13 +1,28 @@
 from __future__ import annotations
 
+import ctypes
+import gc
 from functools import lru_cache
 from pathlib import Path
+from typing import Callable
 
 import cv2
 import numpy as np
 import torch
 
-from app.core.config import TRANSNETV2_DEVICE, TRANSNETV2_THRESHOLD
+from app.core.config import LOW_MEMORY_MODE, TRANSNETV2_DEVICE, TRANSNETV2_THRESHOLD
+
+
+SceneProgressCallback = Callable[[float, str, int | None, int | None], None]
+
+# Standard TransNet inference uses 100 frames and emits the middle 50. On a
+# 512 MB instance, the 3D-convolution workspace for that window can cross the
+# memory limit. A 50-frame window with 12/13 frames of context emits 25 frames
+# and keeps the same overlap pattern with a much smaller activation peak.
+_WINDOW_SIZE = 50 if LOW_MEMORY_MODE else 100
+_START_PADDING = 12 if LOW_MEMORY_MODE else 25
+_OUTPUT_FRAMES = 25 if LOW_MEMORY_MODE else 50
+_OUTPUT_SLICE = slice(_START_PADDING, _START_PADDING + _OUTPUT_FRAMES)
 
 
 def _device() -> torch.device:
@@ -18,88 +33,194 @@ def _device() -> torch.device:
 
 @lru_cache(maxsize=1)
 def _load_model() -> torch.nn.Module:
+    """Load TransNet without importing its module-level singleton.
+
+    ``transnetv2pt.inference`` constructs a global model at import time. That
+    global survives ``lru_cache.clear()`` and used to overlap with YOLO for the
+    rest of the request. Constructing the architecture directly gives this app
+    full control over the model lifetime.
+    """
     try:
-        from transnetv2pt.inference import model
+        import transnetv2pt
+        from transnetv2pt.transnetv2_pytorch import TransNetV2
+
+        weights_path = (
+            Path(transnetv2pt.__file__).resolve().parent
+            / "transnetv2-pytorch-weights.pth"
+        )
+        model = TransNetV2()
+        state_dict = torch.load(
+            weights_path,
+            map_location="cpu",
+            mmap=True,
+            weights_only=True,
+        )
+        # Assign the memory-mapped tensors instead of copying the complete
+        # checkpoint into an already-initialized parameter set.
+        model.load_state_dict(state_dict, assign=True)
+        del state_dict
     except Exception as error:
         raise RuntimeError(f"TransNetV2 is unavailable: {error}") from error
+
+    if LOW_MEMORY_MODE:
+        # Thread pools allocate per-thread workspaces. One CPU thread is both
+        # safer on a 512 MB instance and appropriate for Render's shared CPU.
+        torch.set_num_threads(1)
+        try:
+            torch.set_num_interop_threads(1)
+        except RuntimeError:
+            # PyTorch only permits setting this once per process.
+            pass
 
     model.to(_device())
     model.eval()
     return model
 
 
-def _read_resized_rgb_frames(video_path: Path) -> tuple[np.ndarray, np.ndarray | None]:
-    """Decode every frame for TransNetV2 and record each frame's REAL timestamp.
-
-    Highlight videos are often variable-frame-rate exports, so frame/nominal-fps
-    times drift from what the browser's <video> element plays. Since we decode
-    every frame here anyway, capturing presentation timestamps is free and lets
-    segment boundaries land where the viewer actually sees them.
-    """
-    capture = cv2.VideoCapture(str(video_path))
-    if not capture.isOpened():
-        raise RuntimeError("Could not open video for TransNetV2")
-
-    frames: list[np.ndarray] = []
-    timestamps_seconds: list[float] = []
+def release_transnetv2_model() -> None:
+    """Release the scene model before another PyTorch model is loaded."""
+    _load_model.cache_clear()
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    # Render's native Python runtime uses glibc. Returning freed allocator pages
+    # here prevents the process RSS from remaining at the TransNet peak before
+    # the user later starts YOLO detection/tracking.
     try:
-        while True:
-            success, frame = capture.read()
-            if not success:
-                break
-            # POS_MSEC after read() = timestamp of the NEXT frame on some
-            # backends; treated uniformly it still yields consistent boundaries.
-            timestamps_seconds.append(float(capture.get(cv2.CAP_PROP_POS_MSEC)) / 1000.0)
-            resized = cv2.resize(frame, (48, 27), interpolation=cv2.INTER_AREA)
-            frames.append(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB))
-    finally:
-        capture.release()
-
-    if not frames:
-        raise RuntimeError("Video contains no readable frames")
-
-    timestamps = np.asarray(timestamps_seconds, dtype=np.float64)
-    # Some codecs/backends return zeros or garbage for POS_MSEC — only trust
-    # timestamps that are non-trivial and monotonically non-decreasing.
-    if len(timestamps) < 2 or timestamps[-1] <= 0 or np.any(np.diff(timestamps) < -1e-3):
-        return np.asarray(frames, dtype=np.uint8), None
-    return np.asarray(frames, dtype=np.uint8), timestamps
+        ctypes.CDLL(None).malloc_trim(0)
+    except (AttributeError, OSError, TypeError):
+        pass
 
 
-def _input_windows(frames: np.ndarray):
-    start_padding = 25
-    end_padding = 25 + 50 - (len(frames) % 50 or 50)
-    padded = np.concatenate(
-        [np.repeat(frames[:1], start_padding, axis=0), frames, np.repeat(frames[-1:], end_padding, axis=0)]
-    )
-    for start in range(0, len(padded) - 99, 50):
-        yield padded[start : start + 100][np.newaxis]
+def _read_resized_rgb_frame(
+    capture: cv2.VideoCapture,
+    timestamps_seconds: list[float],
+) -> np.ndarray | None:
+    success, frame = capture.read()
+    if not success:
+        return None
+    # POS_MSEC after read() points at the next frame on some backends, but used
+    # consistently it still preserves variable-frame-rate segment boundaries.
+    timestamps_seconds.append(float(capture.get(cv2.CAP_PROP_POS_MSEC)) / 1000.0)
+    resized = cv2.resize(frame, (48, 27), interpolation=cv2.INTER_AREA)
+    return cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
 
-def _predict_cut_probabilities(frames: np.ndarray) -> np.ndarray:
+def _predict_window(
+    model: torch.nn.Module,
+    device: torch.device,
+    frames: list[np.ndarray],
+) -> np.ndarray:
+    window = np.asarray(frames, dtype=np.uint8)[np.newaxis]
+    with torch.inference_mode():
+        tensor = torch.from_numpy(window).to(device)
+        single_frame_logits, _ = model(tensor)
+        probabilities = torch.sigmoid(single_frame_logits)[0, _OUTPUT_SLICE, 0]
+        result = probabilities.cpu().numpy()
+        del probabilities, single_frame_logits, tensor
+        return result
+
+
+def _stream_cut_probabilities(
+    capture: cv2.VideoCapture,
+    estimated_frame_count: int,
+    progress_callback: SceneProgressCallback | None,
+) -> tuple[np.ndarray, np.ndarray | None]:
+    """Run overlapping TransNet windows while keeping at most 100 frames.
+
+    The previous implementation decoded the entire reel into a NumPy array
+    before inference. Standard mode preserves TransNet's 25/50/25 layout;
+    low-memory mode uses the proportional 12/25/13 layout. Both keep memory
+    bounded independently of reel length.
+    """
+    if progress_callback:
+        progress_callback(0.01, "Loading TransNetV2 scene detector", 0, estimated_frame_count)
+
     model = _load_model()
     device = _device()
+    timestamps_seconds: list[float] = []
     predictions: list[np.ndarray] = []
+    buffer: list[np.ndarray] = []
+    reached_end = False
 
-    with torch.inference_mode():
-        for window in _input_windows(frames):
-            tensor = torch.from_numpy(window).to(device)
-            single_frame_logits, _ = model(tensor)
-            probabilities = torch.sigmoid(single_frame_logits)[0, 25:75, 0]
-            predictions.append(probabilities.cpu().numpy())
+    # First window: repeated frame zero followed by enough real frames to fill
+    # the initial context and output region.
+    initial_frame_count = _WINDOW_SIZE - _START_PADDING
+    while len(buffer) < initial_frame_count:
+        frame = _read_resized_rgb_frame(capture, timestamps_seconds)
+        if frame is None:
+            reached_end = True
+            break
+        buffer.append(frame)
 
-    return np.concatenate(predictions)[: len(frames)]
+    if not buffer:
+        raise RuntimeError("Video contains no readable frames")
+
+    first_window_tail = list(buffer)
+    while len(first_window_tail) < initial_frame_count:
+        first_window_tail.append(first_window_tail[-1])
+    predictions.append(
+        _predict_window(
+            model,
+            device,
+            [buffer[0]] * _START_PADDING + first_window_tail,
+        )
+    )
+    predicted_frames = _OUTPUT_FRAMES
+    buffer = buffer[_OUTPUT_FRAMES - _START_PADDING :]
+
+    while True:
+        while len(buffer) < _WINDOW_SIZE and not reached_end:
+            frame = _read_resized_rgb_frame(capture, timestamps_seconds)
+            if frame is None:
+                reached_end = True
+                break
+            buffer.append(frame)
+
+        if reached_end and predicted_frames >= len(timestamps_seconds):
+            break
+        if not buffer:
+            break
+
+        padded_window = list(buffer)
+        while len(padded_window) < _WINDOW_SIZE:
+            padded_window.append(padded_window[-1])
+        predictions.append(_predict_window(model, device, padded_window))
+        predicted_frames += _OUTPUT_FRAMES
+        buffer = buffer[_OUTPUT_FRAMES:]
+
+        if progress_callback:
+            total = max(estimated_frame_count, len(timestamps_seconds), 1)
+            completed = min(predicted_frames, total)
+            progress_callback(
+                min(0.99, completed / total),
+                f"Detecting scene cuts {completed} of {total} frames",
+                completed,
+                total,
+            )
+
+    probabilities = np.concatenate(predictions)[: len(timestamps_seconds)]
+    timestamps = np.asarray(timestamps_seconds, dtype=np.float64)
+    if (
+        len(timestamps) < 2
+        or timestamps[-1] <= 0
+        or np.any(np.diff(timestamps) < -1e-3)
+    ):
+        timestamps = None
+
+    if progress_callback:
+        total_frames = len(probabilities)
+        progress_callback(
+            1.0,
+            f"Scene scan complete for {total_frames} frames",
+            total_frames,
+            total_frames,
+        )
+    return probabilities, timestamps
 
 
 def _cut_frames_from_probabilities(probabilities: np.ndarray) -> list[int]:
-    """Place each cut at the END of its transition run.
-
-    Highlight edits use dissolves/wipes: the above-threshold run spans the whole
-    transition. Cutting at the peak leaves the tail of the PREVIOUS clip (and
-    blended frames) at the start of the next segment — cutting at the run end
-    starts each segment on the first clean frame of the new shot. For hard cuts
-    (run length 1) both choices are identical.
-    """
+    """Place each cut at the end of its transition run."""
     above_threshold = probabilities >= TRANSNETV2_THRESHOLD
     cut_frames: list[int] = []
     run_start: int | None = None
@@ -108,7 +229,7 @@ def _cut_frames_from_probabilities(probabilities: np.ndarray) -> list[int]:
         if is_cut and run_start is None:
             run_start = index
         elif not is_cut and run_start is not None:
-            cut_frames.append(index)  # first frame below threshold = new shot
+            cut_frames.append(index)
             run_start = None
 
     if run_start is not None:
@@ -116,7 +237,23 @@ def _cut_frames_from_probabilities(probabilities: np.ndarray) -> list[int]:
     return cut_frames
 
 
-def detect_transnetv2_cut_frames(video_path: Path) -> tuple[list[int], np.ndarray | None]:
-    """Returns (cut_frames, per-frame timestamps in seconds or None)."""
-    frames, timestamps = _read_resized_rgb_frames(video_path)
-    return _cut_frames_from_probabilities(_predict_cut_probabilities(frames)), timestamps
+def detect_transnetv2_cut_frames(
+    video_path: Path,
+    progress_callback: SceneProgressCallback | None = None,
+) -> tuple[list[int], np.ndarray | None]:
+    """Return cut frames and optional per-frame presentation timestamps."""
+    capture = cv2.VideoCapture(str(video_path))
+    if not capture.isOpened():
+        raise RuntimeError("Could not open video for TransNetV2")
+
+    estimated_frame_count = max(1, int(capture.get(cv2.CAP_PROP_FRAME_COUNT)))
+    try:
+        probabilities, timestamps = _stream_cut_probabilities(
+            capture,
+            estimated_frame_count,
+            progress_callback,
+        )
+        return _cut_frames_from_probabilities(probabilities), timestamps
+    finally:
+        capture.release()
+        release_transnetv2_model()

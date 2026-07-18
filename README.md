@@ -181,3 +181,21 @@ For deployment, host the Vite frontend on Vercel and run the compute-heavy
 FastAPI/OpenCV/YOLO backend on a container service. The backend intentionally
 uses temporary storage; use durable object storage only if the product later
 requires users to retain data explicitly.
+
+## Low-memory deployment
+
+Render sets `RENDER=true`, which automatically enables the app's bounded-memory
+mode. TransNetV2 streams a maximum of 100 resized frames instead of buffering
+the full reel, its model is released before later pipeline stages, cutaway
+filtering avoids a second neural model, and YOLO11n plus single-frame inference
+are used for detection/tracking. Local and larger-memory deployments retain the
+higher-quality defaults.
+
+Override the automatic choice only when the instance has enough memory:
+
+```powershell
+$env:LOW_MEMORY_MODE = "false"
+```
+
+For a 512 MB Render service, preload the matching small detector in the build
+command with `YOLO('yolo11n.pt')` instead of `YOLO('yolo11m.pt')`.

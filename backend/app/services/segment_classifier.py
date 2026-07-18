@@ -12,7 +12,7 @@ non-gameplay clips into a collapsed section the user can still open.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import cv2
 import numpy as np
@@ -20,6 +20,7 @@ import numpy as np
 from app.core.config import (
     SEGMENT_CLASSIFY_SAMPLES,
     SEGMENT_FILTER_ENABLED,
+    SEGMENT_FILTER_USE_PLAYER_MODEL,
     SEGMENT_GAMEPLAY_MIN_PLAYERS,
     SEGMENT_GRASS_FRACTION_MIN,
     TRACKING_CONFIDENCE_THRESHOLD,
@@ -56,18 +57,44 @@ def _count_players(frame: np.ndarray) -> int:
     return count
 
 
-def classify_segments(video_path: Path, segments: list[SceneSegment]) -> list[dict[str, Any]]:
+def classify_segments(
+    video_path: Path,
+    segments: list[SceneSegment],
+    progress_callback: Callable[[float, str, int | None, int | None], None] | None = None,
+) -> list[dict[str, Any]]:
     """One entry per segment: {"kind": "gameplay"|"cutaway", "gameplay_score": float}."""
+    total_segments = len(segments)
+    if progress_callback:
+        progress_callback(
+            0.01,
+            f"Preparing to filter {total_segments} clip{'s' if total_segments != 1 else ''}",
+            0,
+            total_segments,
+        )
     if not SEGMENT_FILTER_ENABLED:
+        if progress_callback:
+            progress_callback(
+                1.0,
+                "Cutaway filtering disabled",
+                total_segments,
+                total_segments,
+            )
         return [{"kind": "gameplay", "gameplay_score": 1.0} for _ in segments]
 
     capture = cv2.VideoCapture(str(video_path))
     if not capture.isOpened():
+        if progress_callback:
+            progress_callback(
+                1.0,
+                "Cutaway filtering unavailable; keeping every clip",
+                total_segments,
+                total_segments,
+            )
         return [{"kind": "gameplay", "gameplay_score": 1.0} for _ in segments]
 
     classifications: list[dict[str, Any]] = []
     try:
-        for segment in segments:
+        for segment_index, segment in enumerate(segments, start=1):
             sample_numbers = _sample_frame_numbers(segment)
             grassy_samples = 0
             total_samples = 0
@@ -85,17 +112,33 @@ def classify_segments(video_path: Path, segments: list[SceneSegment]) -> list[di
                 )
                 if grass_fraction(small) >= SEGMENT_GRASS_FRACTION_MIN:
                     grassy_samples += 1
-                if position == len(sample_numbers) // 2:
+                if (
+                    SEGMENT_FILTER_USE_PLAYER_MODEL
+                    and position == len(sample_numbers) // 2
+                ):
                     middle_frame = frame
 
             if total_samples == 0:
                 classifications.append({"kind": "gameplay", "gameplay_score": 1.0})
+                if progress_callback:
+                    progress_callback(
+                        segment_index / max(1, total_segments),
+                        f"Filtering clip {segment_index} of {total_segments}",
+                        segment_index,
+                        total_segments,
+                    )
                 continue
 
             grass_score = grassy_samples / total_samples
-            player_count = _count_players(middle_frame) if middle_frame is not None else 0
-            player_score = min(1.0, player_count / max(1, SEGMENT_GAMEPLAY_MIN_PLAYERS))
-            gameplay_score = 0.6 * grass_score + 0.4 * player_score
+            player_count: int | None = None
+            if SEGMENT_FILTER_USE_PLAYER_MODEL and middle_frame is not None:
+                player_count = _count_players(middle_frame)
+                player_score = min(
+                    1.0, player_count / max(1, SEGMENT_GAMEPLAY_MIN_PLAYERS)
+                )
+                gameplay_score = 0.6 * grass_score + 0.4 * player_score
+            else:
+                gameplay_score = grass_score
 
             classifications.append(
                 {
@@ -105,6 +148,15 @@ def classify_segments(video_path: Path, segments: list[SceneSegment]) -> list[di
                     "player_count": player_count,
                 }
             )
+            if progress_callback:
+                progress_callback(
+                    segment_index / max(1, total_segments),
+                    f"Filtering clip {segment_index} of {total_segments}",
+                    segment_index,
+                    total_segments,
+                )
     finally:
         capture.release()
+    if total_segments == 0 and progress_callback:
+        progress_callback(1.0, "No clips needed filtering", 0, 0)
     return classifications

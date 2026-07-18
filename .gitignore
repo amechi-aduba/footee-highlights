@@ -28,3 +28,7 @@ backend/storage/training/
 # Local configuration
 .env
 .env.*
+
+#md files
+TRACKING_IMPROVEMENT_PLAN.md
+PROJECT_OVERVIEW.md

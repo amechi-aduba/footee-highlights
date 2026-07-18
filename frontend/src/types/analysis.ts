@@ -4,6 +4,25 @@ export interface VideoUploadResponse {
   message: string;
 }
 
+export type ProcessingStageStatus = "pending" | "active" | "complete" | "failed";
+
+export interface ProcessingStageProgress {
+  key: "scene_cuts" | "cutaway_filtering" | "thumbnails";
+  label: string;
+  status: ProcessingStageStatus;
+  progress_percent: number;
+  completed_items: number;
+  total_items: number | null;
+}
+
+export interface VideoProcessingProgress {
+  status: "idle" | "processing" | "complete" | "failed";
+  progress_percent: number;
+  current_stage: ProcessingStageProgress["key"] | null;
+  message: string;
+  stages: ProcessingStageProgress[];
+}
+
 export interface VideoMetadata {
   fps: number;
   frame_count: number;

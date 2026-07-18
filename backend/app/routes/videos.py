@@ -9,6 +9,7 @@ from app.models.schemas import (
     FocusedPlayerSelectionRequest,
     FrameDetectionResponse,
     PlayerInfoRequest,
+    VideoProcessingProgressResponse,
     SegmentDetectionRequest,
     VideoAnalysisResult,
     VideoUploadResponse,
@@ -20,6 +21,14 @@ from app.services.object_detection import (
     detect_objects_in_window,
 )
 from app.services.player_tracking import track_selected_player
+from app.services.processing_progress import (
+    complete_processing_progress,
+    discard_processing_progress,
+    fail_processing_progress,
+    get_processing_progress,
+    start_processing_progress,
+    update_processing_progress,
+)
 from app.services.video_processing import process_video
 from app.services.video_storage import (
     delete_video_data,
@@ -72,9 +81,25 @@ def upload_video(video: UploadFile = File(...)) -> VideoUploadResponse:
 @router.post("/{video_id}/process", response_model=VideoAnalysisResult)
 def process_uploaded_video(video_id: str) -> VideoAnalysisResult:
     video_path = find_video_path(video_id)
-    result = process_video(video_id, video_path)
-    save_analysis_result(video_id, result)
+    start_processing_progress(video_id)
+    try:
+        result = process_video(video_id, video_path, update_processing_progress)
+        save_analysis_result(video_id, result)
+    except Exception as error:
+        detail = error.detail if isinstance(error, HTTPException) else "Processing failed. Please retry."
+        fail_processing_progress(video_id, str(detail))
+        raise
+    complete_processing_progress(video_id)
     return VideoAnalysisResult.model_validate(result)
+
+
+@router.get(
+    "/{video_id}/processing-progress",
+    response_model=VideoProcessingProgressResponse,
+)
+def get_uploaded_video_processing_progress(video_id: str) -> VideoProcessingProgressResponse:
+    validate_video_id(video_id)
+    return VideoProcessingProgressResponse.model_validate(get_processing_progress(video_id))
 
 
 @router.get("/{video_id}/result", response_model=VideoAnalysisResult)
@@ -105,6 +130,7 @@ def get_segment_thumbnail(video_id: str, segment_id: str) -> FileResponse:
 @router.delete("/{video_id}")
 def delete_uploaded_video_data(video_id: str) -> dict:
     deleted = delete_video_data(video_id)
+    discard_processing_progress(video_id)
     return {"status": "deleted", **deleted}
 
 
@@ -112,6 +138,7 @@ def delete_uploaded_video_data(video_id: str) -> dict:
 def clean_up_video_session(video_id: str) -> dict:
     """Beacon-friendly cleanup used when the browser page is closing."""
     deleted = delete_video_data(video_id)
+    discard_processing_progress(video_id)
     return {"status": "deleted", **deleted}
 
 

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
 import cv2
 import numpy as np
@@ -30,6 +31,9 @@ from app.core.config import (
 )
 from app.services.object_detection import object_layout_difference, object_layout_signature
 from app.services.transnetv2_detection import detect_transnetv2_cut_frames
+
+
+SceneProgressCallback = Callable[[float, str, int | None, int | None], None]
 
 
 @dataclass(frozen=True)
@@ -213,7 +217,12 @@ def _segments_from_cut_frames(
     return segments
 
 
-def _detect_hybrid_scene_segments(video_path: str, fps: float, frame_count: int) -> list[SceneSegment]:
+def _detect_hybrid_scene_segments(
+    video_path: str,
+    fps: float,
+    frame_count: int,
+    progress_callback: SceneProgressCallback | None = None,
+) -> list[SceneSegment]:
     """Fallback detector using spatial HSV, edges, object layout, and refinement."""
     if frame_count <= 0:
         return [SceneSegment(start_frame=0, end_frame=0)]
@@ -259,6 +268,13 @@ def _detect_hybrid_scene_segments(video_path: str, fps: float, frame_count: int)
             if current_object_layout is not None:
                 previous_object_layout = current_object_layout
         previous_frame = frame
+        if progress_callback:
+            progress_callback(
+                min(0.99, (frame_number + 1) / frame_count),
+                f"Scanning frame {min(frame_number + 1, frame_count)} of {frame_count}",
+                min(frame_number + 1, frame_count),
+                frame_count,
+            )
 
     capture.release()
 
@@ -272,7 +288,11 @@ def _detect_hybrid_scene_segments(video_path: str, fps: float, frame_count: int)
     return segments or [SceneSegment(start_frame=0, end_frame=frame_count)]
 
 
-def _second_pass_cut_candidates(video_path: str, frame_count: int) -> list[int]:
+def _second_pass_cut_candidates(
+    video_path: str,
+    frame_count: int,
+    progress_callback: SceneProgressCallback | None = None,
+) -> list[int]:
     """Sequential scan for hard cuts TransNetV2 missed, using two signals:
 
     1. HSV/edge spike — fast jump cuts between visually different plays.
@@ -285,6 +305,8 @@ def _second_pass_cut_candidates(video_path: str, frame_count: int) -> list[int]:
     Sequential decode (no seeks), downscaled frames, refined afterwards.
     """
     if not SCENE_SECOND_PASS_ENABLED:
+        if progress_callback:
+            progress_callback(1.0, "Visual cut verification skipped", frame_count, frame_count)
         return []
     from app.services.camera_motion import estimate_global_affine
 
@@ -323,6 +345,13 @@ def _second_pass_cut_candidates(video_path: str, frame_count: int) -> list[int]:
                         candidates.append(frame_number)
             previous_small = small
             previous_gray = gray
+            if progress_callback:
+                progress_callback(
+                    min(1.0, (frame_number + 1) / max(1, frame_count)),
+                    f"Verifying scene cuts {min(frame_number + 1, frame_count)} of {frame_count} frames",
+                    min(frame_number + 1, frame_count),
+                    frame_count,
+                )
     finally:
         capture.release()
 
@@ -338,18 +367,60 @@ def _second_pass_cut_candidates(video_path: str, frame_count: int) -> list[int]:
         refine_capture.release()
 
 
-def detect_scene_segments(video_path: str, fps: float, frame_count: int) -> list[SceneSegment]:
+def detect_scene_segments(
+    video_path: str,
+    fps: float,
+    frame_count: int,
+    progress_callback: SceneProgressCallback | None = None,
+) -> list[SceneSegment]:
     """TransNetV2 + second-pass visual scan, falling back to the hybrid detector."""
     if frame_count <= 0:
         return [SceneSegment(start_frame=0, end_frame=0)]
 
     if SCENE_DETECTION_METHOD == "transnetv2":
         try:
-            cut_frames, timestamps = detect_transnetv2_cut_frames(Path(video_path))
-            extra_cuts = _second_pass_cut_candidates(video_path, frame_count)
+            cut_frames, timestamps = detect_transnetv2_cut_frames(
+                Path(video_path),
+                (
+                    lambda fraction, message, completed, total: progress_callback(
+                        fraction * 0.70, message, completed, total
+                    )
+                    if progress_callback
+                    else None
+                ),
+            )
+            extra_cuts = _second_pass_cut_candidates(
+                video_path,
+                frame_count,
+                (
+                    lambda fraction, message, completed, total: progress_callback(
+                        0.70 + fraction * 0.29, message, completed, total
+                    )
+                    if progress_callback
+                    else None
+                ),
+            )
             merged = sorted(set(cut_frames) | set(extra_cuts))
-            return _segments_from_cut_frames(merged, frame_count, fps, timestamps)
+            segments = _segments_from_cut_frames(merged, frame_count, fps, timestamps)
+            if progress_callback:
+                progress_callback(
+                    1.0,
+                    f"Found {len(segments)} scene{'s' if len(segments) != 1 else ''}",
+                    frame_count,
+                    frame_count,
+                )
+            return segments
         except Exception as error:
             print(f"TransNetV2 failed; using hybrid scene detection: {error}")
 
-    return _detect_hybrid_scene_segments(video_path, fps, frame_count)
+    segments = _detect_hybrid_scene_segments(
+        video_path, fps, frame_count, progress_callback
+    )
+    if progress_callback:
+        progress_callback(
+            1.0,
+            f"Found {len(segments)} scene{'s' if len(segments) != 1 else ''}",
+            frame_count,
+            frame_count,
+        )
+    return segments

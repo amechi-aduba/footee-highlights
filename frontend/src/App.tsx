@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   deleteVideoData,
+  getProcessingProgress,
   processVideo,
   requestVideoDataDeletion,
   uploadVideo,
@@ -10,7 +11,7 @@ import { DisclaimerModal } from "./components/DisclaimerModal";
 import { ProcessingPanel } from "./components/ProcessingPanel";
 import { ResultsView } from "./components/ResultsView";
 import { VideoUploader } from "./components/VideoUploader";
-import type { VideoAnalysisResult } from "./types/analysis";
+import type { VideoAnalysisResult, VideoProcessingProgress } from "./types/analysis";
 
 function useTheme() {
   const [dark, setDark] = useState<boolean>(() => {
@@ -65,6 +66,8 @@ function App() {
   const [error, setError] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processingProgress, setProcessingProgress] =
+    useState<VideoProcessingProgress | null>(null);
 
   useEffect(() => {
     if (!videoId) return;
@@ -74,12 +77,35 @@ function App() {
     return () => window.removeEventListener("pagehide", cleanUpSession);
   }, [videoId]);
 
+  useEffect(() => {
+    if (!videoId || !isProcessing) return;
+
+    let cancelled = false;
+    const refreshProgress = async () => {
+      try {
+        const nextProgress = await getProcessingProgress(videoId);
+        if (!cancelled) setProcessingProgress(nextProgress);
+      } catch {
+        // The main processing request reports actionable errors. A transient
+        // polling failure should not interrupt that request.
+      }
+    };
+
+    void refreshProgress();
+    const intervalId = window.setInterval(refreshProgress, 750);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [isProcessing, videoId]);
+
   async function handleUpload() {
     if (!selectedFile) return;
     const previousVideoId = videoId;
     setError("");
     setResult(null);
     setVideoId("");
+    setProcessingProgress(null);
     setIsUploading(true);
     try {
       if (previousVideoId) {
@@ -96,10 +122,16 @@ function App() {
 
   async function handleProcess() {
     setError("");
+    setProcessingProgress(null);
     setIsProcessing(true);
     try {
-      setResult(await processVideo(videoId));
+      const processedResult = await processVideo(videoId);
+      const finalProgress = await getProcessingProgress(videoId).catch(() => null);
+      if (finalProgress) setProcessingProgress(finalProgress);
+      setResult(processedResult);
     } catch (processError) {
+      const failedProgress = await getProcessingProgress(videoId).catch(() => null);
+      if (failedProgress) setProcessingProgress(failedProgress);
       setError(processError instanceof Error ? processError.message : "Processing failed.");
     } finally {
       setIsProcessing(false);
@@ -168,9 +200,10 @@ function App() {
           />
           {videoId && (
             <ProcessingPanel
-              videoId={videoId}
-              isProcessing={isProcessing}
-              onProcess={handleProcess}
+            videoId={videoId}
+            isProcessing={isProcessing}
+            progress={processingProgress}
+            onProcess={handleProcess}
             />
           )}
           {error && (

@@ -10,6 +10,7 @@ from fastapi import HTTPException
 from app.core.config import TRACKING_MODEL_PATH, YOLO_MODEL_PATH
 
 
+@lru_cache(maxsize=2)
 def _load_yolo(model_path: str) -> Any:
     try:
         from ultralytics import YOLO
@@ -22,15 +23,13 @@ def _load_yolo(model_path: str) -> Any:
         ) from error
 
 
-@lru_cache(maxsize=1)
 def get_detection_model() -> Any:
-    """High-quality detector (yolo11m) for click-frame detection. Loaded once per process."""
+    """Click-frame detector, shared by path with tracking when possible."""
     return _load_yolo(YOLO_MODEL_PATH)
 
 
-@lru_cache(maxsize=1)
 def get_tracking_model() -> Any:
-    """Fast detector (yolo11n when promoted) for the detection-cache pass. Loaded once per process."""
+    """Tracking detector, shared by path with detection when possible."""
     return _load_yolo(TRACKING_MODEL_PATH)
 
 
