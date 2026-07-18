@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Frontend
+node_modules/
+dist/
+*.tsbuildinfo
+.vercel/
+tmp/
+
+# Local video processing output
+backend/storage/raw_videos/*
+!backend/storage/raw_videos/.gitkeep
+backend/storage/thumbnails/*
+!backend/storage/thumbnails/.gitkeep
+backend/storage/segments/
+backend/storage/results/*
+!backend/storage/results/.gitkeep
+backend/storage/detections/
+backend/storage/uploads_index.json
+backend/storage/ultralytics/
+backend/*.pt
+backend/models/*.pt
+backend/storage/training/
+
+# Local configuration
+.env
+.env.*

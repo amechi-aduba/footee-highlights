@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- Design tokens: floodlight blue + amber accent ---- */
+:root {
+  --c-bg: 243 246 251;
+  --c-surface: 255 255 255;
+  --c-surface2: 236 241 249;
+  --c-line: 218 227 240;
+  --c-ink: 12 22 40;
+  --c-mute: 90 105 129;
+  --c-primary: 37 99 235; /* blue-600 */
+  --c-accent: 202 116 4; /* deep amber, AA on white */
+}
+
+.dark {
+  --c-bg: 7 12 23;
+  --c-surface: 14 22 39;
+  --c-surface2: 20 30 51;
+  --c-line: 33 46 71;
+  --c-ink: 231 238 250;
+  --c-mute: 141 158 185;
+  --c-primary: 76 141 255; /* lifted blue for dark surfaces */
+  --c-accent: 251 191 36; /* amber-400 */
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: rgb(var(--c-bg));
+  color: rgb(var(--c-ink));
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+::selection {
+  background: rgb(var(--c-primary) / 0.25);
+}
+
+/* Subtle themed scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--c-line)) transparent;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface shadow-card transition-colors duration-300;
+  }
+  .kicker {
+    @apply text-[11px] font-bold uppercase tracking-[0.22em] text-primary;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:shadow-lift hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:shadow-none disabled:hover:brightness-100;
+  }
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 dark:text-slate-900;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-transparent px-4 py-2 text-sm font-semibold text-mute transition-all duration-200 hover:border-mute hover:text-ink active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold;
+  }
+  .input-line {
+    @apply rounded-lg border border-line bg-surface2 text-sm text-ink transition-colors;
+  }
+}
+
+/* Trait bars grow from the left */
+.bar-grow {
+  transform-origin: left center;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 1em;
+  height: 1em;
+  border-radius: 9999px;
+  border: 2px solid rgb(255 255 255 / 0.35);
+  border-top-color: currentColor;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

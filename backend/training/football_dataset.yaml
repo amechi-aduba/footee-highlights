@@ -1,0 +1,9 @@
+path: ../storage/training/football_dataset
+train: images/train
+val: images/val
+
+names:
+  0: player
+  1: goalkeeper
+  2: referee
+  3: ball

@@ -1,0 +1,9 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+python-multipart==0.0.20
+opencv-python-headless==4.11.0.86
+numpy==2.2.5
+pydantic==2.11.4
+ultralytics==8.3.152
+transnetv2pt @ git+https://github.com/kunato/transnetv2pt.git@d40e4a9dfef4a37171ba4d2483b2a4992366545c
+lap==0.5.12
