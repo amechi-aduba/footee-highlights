@@ -5,6 +5,7 @@ import {
   processVideo,
   requestVideoDataDeletion,
   uploadVideo,
+  waitForBackend,
 } from "./api/client";
 import footeeVisionLogo from "./assets/footee-vision-logo.png";
 import { DisclaimerModal } from "./components/DisclaimerModal";
@@ -65,6 +66,7 @@ function App() {
   const [result, setResult] = useState<VideoAnalysisResult | null>(null);
   const [error, setError] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingProgress, setProcessingProgress] =
     useState<VideoProcessingProgress | null>(null);
@@ -107,16 +109,26 @@ function App() {
     setVideoId("");
     setProcessingProgress(null);
     setIsUploading(true);
+    setUploadStatus("Connecting to the analysis server…");
     try {
       if (previousVideoId) {
         await deleteVideoData(previousVideoId).catch(() => undefined);
       }
+      await waitForBackend((attempt, totalAttempts) => {
+        setUploadStatus(
+          attempt === 1
+            ? "Connecting to the analysis server…"
+            : `Waking the analysis server… ${attempt}/${totalAttempts}`,
+        );
+      });
+      setUploadStatus("Uploading video…");
       const response = await uploadVideo(selectedFile);
       setVideoId(response.video_id);
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : "Upload failed.");
     } finally {
       setIsUploading(false);
+      setUploadStatus("");
     }
   }
 
@@ -195,6 +207,7 @@ function App() {
           <VideoUploader
             selectedFile={selectedFile}
             isUploading={isUploading}
+            uploadStatus={uploadStatus}
             onFileChange={setSelectedFile}
             onUpload={handleUpload}
           />

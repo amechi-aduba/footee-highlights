@@ -1,0 +1,17 @@
+.git
+.gitignore
+.vercel
+.vscode
+
+frontend
+
+backend/.venv
+backend/**/__pycache__
+backend/**/*.pyc
+backend/storage
+backend/training
+backend/*.pt
+backend/models/*.pt
+
+PROJECT_OVERVIEW.md
+TRACKING_IMPROVEMENT_PLAN.md

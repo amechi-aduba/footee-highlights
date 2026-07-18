@@ -1,7 +1,7 @@
 import asyncio
 from contextlib import asynccontextmanager, suppress
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import (
@@ -46,6 +46,21 @@ app.add_middleware(
 app.include_router(videos_router)
 
 
+@app.get("/", include_in_schema=False)
+def service_root() -> dict[str, str]:
+    return {
+        "status": "ok",
+        "service": "footee-vision-backend",
+        "docs": "/docs",
+        "health": "/health",
+    }
+
+
 @app.get("/health", response_model=HealthResponse)
 def health_check() -> HealthResponse:
     return HealthResponse(status="ok", service="footee-vision-backend")
+
+
+@app.head("/health", include_in_schema=False)
+def health_check_head() -> Response:
+    return Response(status_code=200)

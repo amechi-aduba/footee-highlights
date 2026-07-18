@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 interface VideoUploaderProps {
   selectedFile: File | null;
   isUploading: boolean;
+  uploadStatus?: string;
   onFileChange: (file: File | null) => void;
   onUpload: () => void;
 }
@@ -16,6 +17,7 @@ function formatBytes(bytes: number) {
 export function VideoUploader({
   selectedFile,
   isUploading,
+  uploadStatus,
   onFileChange,
   onUpload,
 }: VideoUploaderProps) {
@@ -94,7 +96,7 @@ export function VideoUploader({
           onClick={onUpload}
         >
           {isUploading && <span className="spinner" />}
-          {isUploading ? "Uploading…" : "Upload video"}
+          {isUploading ? uploadStatus || "Uploading…" : "Upload video"}
         </button>
         <p className="text-xs text-mute">
           Temporarily uploaded for analysis, then automatically deleted.

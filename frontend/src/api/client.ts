@@ -13,6 +13,46 @@ import type {
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
+const BACKEND_WAKE_ATTEMPTS = 12;
+const BACKEND_WAKE_DELAY_MS = 5_000;
+const BACKEND_HEALTH_TIMEOUT_MS = 10_000;
+const PROCESSING_POLL_DELAY_MS = 1_000;
+
+function delay(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+}
+
+export async function waitForBackend(
+  onAttempt?: (attempt: number, totalAttempts: number) => void,
+): Promise<void> {
+  for (let attempt = 1; attempt <= BACKEND_WAKE_ATTEMPTS; attempt += 1) {
+    onAttempt?.(attempt, BACKEND_WAKE_ATTEMPTS);
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(
+      () => controller.abort(),
+      BACKEND_HEALTH_TIMEOUT_MS,
+    );
+    try {
+      const response = await fetch(`${API_BASE_URL}/health`, {
+        cache: "no-store",
+        signal: controller.signal,
+      });
+      if (response.ok) return;
+    } catch {
+      // A scale-to-zero backend can refuse requests while its container starts.
+      // The health probe itself triggers the wake-up, so retry before upload.
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
+    if (attempt < BACKEND_WAKE_ATTEMPTS) {
+      await delay(BACKEND_WAKE_DELAY_MS);
+    }
+  }
+  throw new Error(
+    "The free analysis server did not wake up in time. Please wait a moment and retry.",
+  );
+}
+
 async function readResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const body = await response.json().catch(() => null);
@@ -33,11 +73,25 @@ export async function uploadVideo(file: File): Promise<VideoUploadResponse> {
 }
 
 export async function processVideo(videoId: string): Promise<VideoAnalysisResult> {
-  return readResponse(
+  await readResponse(
     await fetch(`${API_BASE_URL}/api/videos/${videoId}/process`, {
       method: "POST",
     }),
   );
+
+  // Processing can exceed Azure Container Apps' per-request timeout. The POST
+  // starts the task; these short requests also keep a scale-to-zero replica
+  // active until the result has been persisted.
+  while (true) {
+    const progress = await getProcessingProgress(videoId);
+    if (progress.status === "complete") {
+      return getVideoResult(videoId);
+    }
+    if (progress.status === "failed") {
+      throw new Error(progress.message || "Processing failed. Please retry.");
+    }
+    await delay(PROCESSING_POLL_DELAY_MS);
+  }
 }
 
 export async function getProcessingProgress(
@@ -45,6 +99,14 @@ export async function getProcessingProgress(
 ): Promise<VideoProcessingProgress> {
   return readResponse(
     await fetch(`${API_BASE_URL}/api/videos/${videoId}/processing-progress`, {
+      cache: "no-store",
+    }),
+  );
+}
+
+export async function getVideoResult(videoId: string): Promise<VideoAnalysisResult> {
+  return readResponse(
+    await fetch(`${API_BASE_URL}/api/videos/${videoId}/result`, {
       cache: "no-store",
     }),
   );

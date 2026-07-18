@@ -182,14 +182,53 @@ FastAPI/OpenCV/YOLO backend on a container service. The backend intentionally
 uses temporary storage; use durable object storage only if the product later
 requires users to retain data explicitly.
 
+## Azure Container Apps backend
+
+The repository root contains a production Docker image and
+`deploy-azure.ps1`. The deployment uses Azure Container Apps' Consumption
+profile with one 2-vCPU/4-GiB replica at most and scales to zero while idle.
+Uploads and derived artifacts live only in `/tmp/footee-vision` and remain
+covered by the automatic one-hour cleanup policy.
+
+Install Azure CLI, close and reopen PowerShell, then sign in and deploy:
+
+```powershell
+winget install --exact --id Microsoft.AzureCLI
+az login
+az account show --query "{subscription:name,id:id}" --output table
+cd C:\Users\Amech\OneDrive\Desktop\CompSCI\fullstack\footee-highlights
+docker context use desktop-linux
+.\deploy-azure.ps1
+```
+
+Confirm that the active subscription is **Azure for Students** before running
+the deployment and start Docker Desktop first. The script registers the
+required resource providers, creates the resource group and Basic registry,
+builds the Linux image locally, pushes it to Azure, creates the Container Apps
+environment and backend, then prints the HTTPS backend URL.
+
+Set that URL in Vercel as `VITE_API_BASE_URL` without a trailing slash and
+redeploy the frontend. Verify the backend directly at `<BACKEND_URL>/health`.
+
+Future backend deployments use the same command:
+
+```powershell
+.\deploy-azure.ps1
+```
+
+To remove all Azure resources and stop all related usage:
+
+```powershell
+az group delete --name footee-vision-rg --yes --no-wait
+```
+
 ## Low-memory deployment
 
-Render sets `RENDER=true`, which automatically enables the app's bounded-memory
-mode. TransNetV2 streams a maximum of 100 resized frames instead of buffering
-the full reel, its model is released before later pipeline stages, cutaway
-filtering avoids a second neural model, and YOLO11n plus single-frame inference
-are used for detection/tracking. Local and larger-memory deployments retain the
-higher-quality defaults.
+`LOW_MEMORY_MODE=true` enables the app's bounded-memory path. TransNetV2 streams
+a limited window of resized frames instead of buffering the full reel, its model
+is released before later pipeline stages, cutaway filtering avoids a second
+neural model, and YOLO11n plus bounded batches are used for detection/tracking.
+Local deployments can retain the higher-quality defaults.
 
 Override the automatic choice only when the instance has enough memory:
 
@@ -197,5 +236,5 @@ Override the automatic choice only when the instance has enough memory:
 $env:LOW_MEMORY_MODE = "false"
 ```
 
-For a 512 MB Render service, preload the matching small detector in the build
-command with `YOLO('yolo11n.pt')` instead of `YOLO('yolo11m.pt')`.
+For any 512 MB service, preload the matching small detector in the build command
+with `YOLO('yolo11n.pt')` instead of `YOLO('yolo11m.pt')`.

@@ -31,6 +31,12 @@ class VideoProcessingProgressResponse(BaseModel):
     stages: list[ProcessingStageProgress]
 
 
+class VideoProcessingStartResponse(BaseModel):
+    video_id: str
+    status: str
+    message: str
+
+
 class VideoMetadata(BaseModel):
     fps: float
     frame_count: int

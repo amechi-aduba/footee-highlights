@@ -1,7 +1,8 @@
+import logging
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 
 from app.core.config import THUMBNAILS_DIR
@@ -10,6 +11,7 @@ from app.models.schemas import (
     FrameDetectionResponse,
     PlayerInfoRequest,
     VideoProcessingProgressResponse,
+    VideoProcessingStartResponse,
     SegmentDetectionRequest,
     VideoAnalysisResult,
     VideoUploadResponse,
@@ -41,6 +43,7 @@ from app.services.video_storage import (
 )
 
 router = APIRouter(prefix="/api/videos", tags=["videos"])
+logger = logging.getLogger(__name__)
 
 
 def _validate_segment_id(segment_id: str) -> None:
@@ -78,19 +81,49 @@ def upload_video(video: UploadFile = File(...)) -> VideoUploadResponse:
     )
 
 
-@router.post("/{video_id}/process", response_model=VideoAnalysisResult)
-def process_uploaded_video(video_id: str) -> VideoAnalysisResult:
-    video_path = find_video_path(video_id)
-    start_processing_progress(video_id)
+def _process_uploaded_video_task(video_id: str, video_path: Path) -> None:
+    """Run a long video job outside the request/response lifetime.
+
+    Azure Container Apps limits individual HTTP requests to four minutes. The
+    browser keeps this scale-to-zero container awake by polling progress while
+    this task runs, then fetches the persisted result when it completes.
+    """
     try:
         result = process_video(video_id, video_path, update_processing_progress)
         save_analysis_result(video_id, result)
     except Exception as error:
         detail = error.detail if isinstance(error, HTTPException) else "Processing failed. Please retry."
         fail_processing_progress(video_id, str(detail))
-        raise
+        logger.exception("Video processing failed for %s", video_id)
+        return
     complete_processing_progress(video_id)
-    return VideoAnalysisResult.model_validate(result)
+
+
+@router.post(
+    "/{video_id}/process",
+    response_model=VideoProcessingStartResponse,
+    status_code=202,
+)
+def process_uploaded_video(
+    video_id: str,
+    background_tasks: BackgroundTasks,
+) -> VideoProcessingStartResponse:
+    video_path = find_video_path(video_id)
+    current_progress = get_processing_progress(video_id)
+    if current_progress["status"] == "processing":
+        return VideoProcessingStartResponse(
+            video_id=video_id,
+            status="processing",
+            message="Video processing is already running",
+        )
+
+    start_processing_progress(video_id)
+    background_tasks.add_task(_process_uploaded_video_task, video_id, video_path)
+    return VideoProcessingStartResponse(
+        video_id=video_id,
+        status="processing",
+        message="Video processing started",
+    )
 
 
 @router.get(
