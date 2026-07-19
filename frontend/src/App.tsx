@@ -8,10 +8,12 @@ import {
   waitForBackend,
 } from "./api/client";
 import footeeVisionLogo from "./assets/footee-vision-logo.png";
+import { DemoSampleGallery } from "./components/DemoSampleGallery";
 import { DisclaimerModal } from "./components/DisclaimerModal";
 import { ProcessingPanel } from "./components/ProcessingPanel";
 import { ResultsView } from "./components/ResultsView";
 import { VideoUploader } from "./components/VideoUploader";
+import { DEMO_SAMPLES, type DemoSample } from "./data/demoSamples";
 import type { VideoAnalysisResult, VideoProcessingProgress } from "./types/analysis";
 
 function useTheme() {
@@ -70,6 +72,7 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingProgress, setProcessingProgress] =
     useState<VideoProcessingProgress | null>(null);
+  const [loadingSampleId, setLoadingSampleId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!videoId) return;
@@ -150,6 +153,28 @@ function App() {
     }
   }
 
+  async function handleDemoSelect(sample: DemoSample) {
+    const previousVideoId = videoId;
+    setError("");
+    setVideoId("");
+    setResult(null);
+    setSelectedFile(null);
+    setProcessingProgress(null);
+    setLoadingSampleId(sample.id);
+    try {
+      if (previousVideoId) {
+        await deleteVideoData(previousVideoId).catch(() => undefined);
+      }
+      const response = await fetch(sample.resultPath, { cache: "force-cache" });
+      if (!response.ok) throw new Error("This sample could not be loaded.");
+      setResult((await response.json()) as VideoAnalysisResult);
+    } catch (sampleError) {
+      setError(sampleError instanceof Error ? sampleError.message : "Sample loading failed.");
+    } finally {
+      setLoadingSampleId(null);
+    }
+  }
+
   return (
     <div className="relative min-h-screen overflow-x-clip">
       <DisclaimerModal />
@@ -208,8 +233,17 @@ function App() {
             selectedFile={selectedFile}
             isUploading={isUploading}
             uploadStatus={uploadStatus}
-            onFileChange={setSelectedFile}
+            onFileChange={(file) => {
+              setSelectedFile(file);
+              if (result?.demo) setResult(null);
+            }}
             onUpload={handleUpload}
+          />
+          <DemoSampleGallery
+            samples={DEMO_SAMPLES}
+            activeSampleId={result?.demo?.id}
+            loadingSampleId={loadingSampleId}
+            onSelect={handleDemoSelect}
           />
           {videoId && (
             <ProcessingPanel
@@ -224,7 +258,7 @@ function App() {
               {error}
             </p>
           )}
-          {result && <ResultsView result={result} />}
+          {result && <ResultsView key={result.video_id} result={result} />}
         </div>
       </main>
 

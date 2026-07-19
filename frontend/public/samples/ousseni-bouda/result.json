@@ -1,0 +1,576 @@
+{
+  "video_id": "demo-ousseni-bouda",
+  "status": "completed",
+  "metadata": {
+    "fps": 29.97,
+    "frame_count": 15796,
+    "duration_seconds": 527.06,
+    "width": 640,
+    "height": 360
+  },
+  "segments": [
+    {
+      "segment_id": "seg_001",
+      "start_time": 0.0,
+      "end_time": 2.836,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_001.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_002",
+      "start_time": 2.836,
+      "end_time": 6.874,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_002.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_003",
+      "start_time": 6.874,
+      "end_time": 9.009,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_003.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_004",
+      "start_time": 9.009,
+      "end_time": 15.148,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_004.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_005",
+      "start_time": 15.148,
+      "end_time": 18.352,
+      "kind": "cutaway",
+      "gameplay_score": 0.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_005.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_006",
+      "start_time": 18.352,
+      "end_time": 39.273,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_006.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_007",
+      "start_time": 39.273,
+      "end_time": 57.958,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_007.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_008",
+      "start_time": 57.958,
+      "end_time": 73.173,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_008.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_009",
+      "start_time": 73.173,
+      "end_time": 118.552,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_009.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_010",
+      "start_time": 118.552,
+      "end_time": 125.125,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_010.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_011",
+      "start_time": 125.125,
+      "end_time": 131.298,
+      "kind": "cutaway",
+      "gameplay_score": 0.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_011.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_012",
+      "start_time": 131.298,
+      "end_time": 137.938,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_012.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_013",
+      "start_time": 137.938,
+      "end_time": 174.508,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_013.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_014",
+      "start_time": 174.508,
+      "end_time": 189.189,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_014.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_015",
+      "start_time": 189.189,
+      "end_time": 192.125,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_015.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_016",
+      "start_time": 192.125,
+      "end_time": 198.498,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_016.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_017",
+      "start_time": 198.498,
+      "end_time": 204.104,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_017.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_018",
+      "start_time": 204.104,
+      "end_time": 234.334,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_018.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_019",
+      "start_time": 234.334,
+      "end_time": 279.413,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_019.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_020",
+      "start_time": 279.413,
+      "end_time": 303.637,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_020.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_021",
+      "start_time": 303.637,
+      "end_time": 319.786,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_021.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_022",
+      "start_time": 319.786,
+      "end_time": 329.229,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_022.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_023",
+      "start_time": 329.229,
+      "end_time": 352.653,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_023.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_024",
+      "start_time": 352.653,
+      "end_time": 368.869,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_024.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_025",
+      "start_time": 368.869,
+      "end_time": 372.206,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_025.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_026",
+      "start_time": 372.206,
+      "end_time": 378.312,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_026.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_027",
+      "start_time": 378.312,
+      "end_time": 384.685,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_027.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_028",
+      "start_time": 384.685,
+      "end_time": 498.632,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_028.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_029",
+      "start_time": 498.632,
+      "end_time": 527.06,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/ousseni-bouda/thumbnails/seg_029.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    }
+  ],
+  "final_profile_placeholder": {
+    "predicted_role": "unknown",
+    "confidence": "low",
+    "summary": "Player role analysis will be generated after focused-player tracking is implemented."
+  },
+  "demo": {
+    "id": "ousseni-bouda",
+    "title": "Ousseni Bouda",
+    "description": "A preprocessed version of the senior-year high-school reel.",
+    "video_path": "/samples/ousseni-bouda/video.mp4",
+    "read_only": true
+  }
+}

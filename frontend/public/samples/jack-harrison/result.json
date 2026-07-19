@@ -1,0 +1,291 @@
+{
+  "video_id": "demo-jack-harrison",
+  "status": "completed",
+  "metadata": {
+    "fps": 29.97,
+    "frame_count": 11652,
+    "duration_seconds": 388.788,
+    "width": 640,
+    "height": 360
+  },
+  "segments": [
+    {
+      "segment_id": "seg_001",
+      "start_time": 0.0,
+      "end_time": 8.976,
+      "kind": "gameplay",
+      "gameplay_score": 0.5,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_001.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_002",
+      "start_time": 8.976,
+      "end_time": 21.922,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_002.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_003",
+      "start_time": 21.922,
+      "end_time": 40.14,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_003.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_004",
+      "start_time": 40.14,
+      "end_time": 126.56,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_004.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_005",
+      "start_time": 126.56,
+      "end_time": 131.665,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_005.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_006",
+      "start_time": 131.665,
+      "end_time": 141.842,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_006.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_007",
+      "start_time": 141.842,
+      "end_time": 156.623,
+      "kind": "gameplay",
+      "gameplay_score": 0.5,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_007.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_008",
+      "start_time": 156.623,
+      "end_time": 188.155,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_008.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_009",
+      "start_time": 188.155,
+      "end_time": 221.221,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_009.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_010",
+      "start_time": 221.221,
+      "end_time": 251.318,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_010.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_011",
+      "start_time": 251.318,
+      "end_time": 290.691,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_011.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_012",
+      "start_time": 290.691,
+      "end_time": 297.631,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_012.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_013",
+      "start_time": 297.631,
+      "end_time": 387.387,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_013.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_014",
+      "start_time": 387.387,
+      "end_time": 388.789,
+      "kind": "cutaway",
+      "gameplay_score": 0.0,
+      "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_014.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    }
+  ],
+  "final_profile_placeholder": {
+    "predicted_role": "unknown",
+    "confidence": "low",
+    "summary": "Player role analysis will be generated after focused-player tracking is implemented."
+  },
+  "demo": {
+    "id": "jack-harrison",
+    "title": "Jack Harrison",
+    "description": "A preprocessed version of the number 11 highlight reel.",
+    "video_path": "/samples/jack-harrison/video.mp4",
+    "read_only": true
+  }
+}

@@ -1,0 +1,367 @@
+{
+  "video_id": "demo-alistair-johnston",
+  "status": "completed",
+  "metadata": {
+    "fps": 23.976,
+    "frame_count": 7536,
+    "duration_seconds": 314.314,
+    "width": 640,
+    "height": 360
+  },
+  "segments": [
+    {
+      "segment_id": "seg_001",
+      "start_time": 0.0,
+      "end_time": 19.478,
+      "kind": "cutaway",
+      "gameplay_score": 0.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_001.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_002",
+      "start_time": 19.478,
+      "end_time": 27.152,
+      "kind": "gameplay",
+      "gameplay_score": 0.5,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_002.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_003",
+      "start_time": 27.152,
+      "end_time": 31.406,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_003.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_004",
+      "start_time": 31.406,
+      "end_time": 71.738,
+      "kind": "gameplay",
+      "gameplay_score": 0.5,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_004.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_005",
+      "start_time": 71.738,
+      "end_time": 72.99,
+      "kind": "cutaway",
+      "gameplay_score": 0.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_005.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_006",
+      "start_time": 72.99,
+      "end_time": 80.08,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_006.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_007",
+      "start_time": 80.08,
+      "end_time": 81.79,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_007.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_008",
+      "start_time": 81.79,
+      "end_time": 86.837,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_008.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_009",
+      "start_time": 86.837,
+      "end_time": 110.777,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_009.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_010",
+      "start_time": 110.777,
+      "end_time": 132.508,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_010.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_011",
+      "start_time": 132.508,
+      "end_time": 154.071,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_011.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_012",
+      "start_time": 154.071,
+      "end_time": 187.271,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_012.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_013",
+      "start_time": 187.271,
+      "end_time": 251.627,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_013.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_014",
+      "start_time": 251.627,
+      "end_time": 263.764,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_014.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_015",
+      "start_time": 263.764,
+      "end_time": 268.227,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_015.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_016",
+      "start_time": 268.227,
+      "end_time": 281.073,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_016.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_017",
+      "start_time": 281.073,
+      "end_time": 300.384,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_017.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    },
+    {
+      "segment_id": "seg_018",
+      "start_time": 300.384,
+      "end_time": 314.314,
+      "kind": "gameplay",
+      "gameplay_score": 1.0,
+      "thumbnail_path": "/samples/alistair-johnston/thumbnails/seg_018.jpg",
+      "focused_player_status": "demo",
+      "focused_player_selection": null,
+      "focused_player_track": null,
+      "object_detection_summary": null,
+      "detected_actions_placeholder": [],
+      "features_placeholder": {
+        "wide_positioning_score": null,
+        "central_positioning_score": null,
+        "final_third_score": null,
+        "ball_proximity_score": null
+      }
+    }
+  ],
+  "final_profile_placeholder": {
+    "predicted_role": "unknown",
+    "confidence": "low",
+    "summary": "Player role analysis will be generated after focused-player tracking is implemented."
+  },
+  "demo": {
+    "id": "alistair-johnston",
+    "title": "Alistair Johnston",
+    "description": "A preprocessed version of the 2019 Wake Forest highlight reel.",
+    "video_path": "/samples/alistair-johnston/video.mp4",
+    "read_only": true
+  }
+}

@@ -24,11 +24,11 @@ backend/storage/ultralytics/
 backend/*.pt
 backend/models/*.pt
 backend/storage/training/
+backend/storage/demo-build/
 
 # Local configuration
 .env
 .env.*
 
-#md files
+# Retired internal planning document
 TRACKING_IMPROVEMENT_PLAN.md
-PROJECT_OVERVIEW.md

@@ -12,7 +12,7 @@ import type {
   FocusedPlayerTrack,
   SegmentAnalysis,
 } from "../types/analysis";
-import { clipLabel } from "./ResultsView";
+import { clipLabel } from "../utils/video";
 
 function formatTimestamp(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
@@ -23,13 +23,24 @@ function formatTimestamp(totalSeconds: number) {
 interface SegmentCardProps {
   segment: SegmentAnalysis;
   videoId: string;
+  videoUrl?: string;
+  thumbnailUrl?: string;
+  readOnly?: boolean;
   /** Present when the card is opened from the clip grid — shows a close button. */
   onClose?: () => void;
   /** Lets the clip grid update its status badge after select/track/reset. */
   onStatusChange?: (status: "selected" | "tracked" | "not_selected") => void;
 }
 
-export function SegmentCard({ segment, videoId, onClose, onStatusChange }: SegmentCardProps) {
+export function SegmentCard({
+  segment,
+  videoId,
+  videoUrl: providedVideoUrl,
+  thumbnailUrl,
+  readOnly = false,
+  onClose,
+  onStatusChange,
+}: SegmentCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const clipDuration = Math.max(0, segment.end_time - segment.start_time);
   const [currentTime, setCurrentTime] = useState(0);
@@ -52,7 +63,7 @@ export function SegmentCard({ segment, videoId, onClose, onStatusChange }: Segme
   );
   const hasAutoDetected = useRef(false);
   const lastLostPauseTime = useRef<number | null>(null);
-  const videoUrl = `${API_BASE_URL}/api/videos/${videoId}/video`;
+  const videoUrl = providedVideoUrl ?? `${API_BASE_URL}/api/videos/${videoId}/video`;
 
   function seekToClipTime(clipTime: number) {
     const video = videoRef.current;
@@ -258,14 +269,14 @@ export function SegmentCard({ segment, videoId, onClose, onStatusChange }: Segme
           ref={videoRef}
           className="h-full w-full object-contain"
           preload="metadata"
-          poster={`${API_BASE_URL}${segment.thumbnail_path}`}
+          poster={thumbnailUrl ?? `${API_BASE_URL}${segment.thumbnail_path}`}
           src={videoUrl}
           onLoadedMetadata={() => {
             seekToClipTime(0);
             // Detect players immediately on open so the user sees selectable
             // boxes on the first frame without an extra click. Skip if this
             // clip was already tracked — the verify overlay is what matters.
-            if (!hasAutoDetected.current && !focusedTrack) {
+            if (!readOnly && !hasAutoDetected.current && !focusedTrack) {
               hasAutoDetected.current = true;
               void handleDetectFrame();
             }
@@ -356,15 +367,17 @@ export function SegmentCard({ segment, videoId, onClose, onStatusChange }: Segme
           <button className="btn-primary btn-sm" type="button" onClick={togglePlayback}>
             {isPlaying ? "Pause" : "Play"}
           </button>
-          <button
-            className="btn-accent btn-sm whitespace-nowrap"
-            type="button"
-            disabled={!focusedPlayerId || isTracking}
-            onClick={handleTrackPlayer}
-          >
-            {isTracking && <span className="spinner" />}
-            {isTracking ? "Tracking…" : "Track selected player"}
-          </button>
+          {!readOnly && (
+            <button
+              className="btn-accent btn-sm whitespace-nowrap"
+              type="button"
+              disabled={!focusedPlayerId || isTracking}
+              onClick={handleTrackPlayer}
+            >
+              {isTracking && <span className="spinner" />}
+              {isTracking ? "Tracking…" : "Track selected player"}
+            </button>
+          )}
           <input
             className="min-w-0 flex-1 accent-primary"
             type="range"
@@ -391,27 +404,29 @@ export function SegmentCard({ segment, videoId, onClose, onStatusChange }: Segme
             </button>
           )}
         </div>
-        <div className="mb-4 flex flex-wrap gap-2">
-          <button
-            className="btn-primary btn-sm"
-            type="button"
-            disabled={isDetectingFrame}
-            onClick={() => handleDetectFrame()}
-          >
-            {isDetectingFrame && <span className="spinner" />}
-            {isDetectingFrame ? "Detecting…" : "Detect players in this frame"}
-          </button>
-          {(focusedPlayerId || focusedTrack) && (
+        {!readOnly && (
+          <div className="mb-4 flex flex-wrap gap-2">
             <button
-              className="rounded-lg border border-red-400/50 px-3 py-1.5 text-xs font-semibold text-red-500 transition-colors hover:bg-red-500/10"
+              className="btn-primary btn-sm"
               type="button"
-              onClick={handleResetSelection}
-              title="Wrong player? Clear the selection, anchors, and track to start over."
+              disabled={isDetectingFrame}
+              onClick={() => handleDetectFrame()}
             >
-              Reset selection
+              {isDetectingFrame && <span className="spinner" />}
+              {isDetectingFrame ? "Detecting…" : "Detect players in this frame"}
             </button>
-          )}
-        </div>
+            {(focusedPlayerId || focusedTrack) && (
+              <button
+                className="rounded-lg border border-red-400/50 px-3 py-1.5 text-xs font-semibold text-red-500 transition-colors hover:bg-red-500/10"
+                type="button"
+                onClick={handleResetSelection}
+                title="Wrong player? Clear the selection, anchors, and track to start over."
+              >
+                Reset selection
+              </button>
+            )}
+          </div>
+        )}
         {detectedTeams.length > 0 && (
           <div className="mb-4 rounded-lg border border-line bg-surface2/60 p-3">
             <p className="mb-2 text-xs font-semibold text-ink">Filter player boxes by jersey color</p>
@@ -446,14 +461,23 @@ export function SegmentCard({ segment, videoId, onClose, onStatusChange }: Segme
             {formatTimestamp(segment.start_time)} - {formatTimestamp(segment.end_time)}
           </span>
         </div>
-        <p className="mt-2 text-xs uppercase tracking-wide text-mute">
-          Focused player: {segment.focused_player_status.replace("_", " ")}
-        </p>
-        <p className="mt-2 text-xs text-mute">
-          Players are detected automatically when the clip opens — click a box to
-          select, then track. Scrub and re-detect any time to pick from a
-          different frame.
-        </p>
+        {readOnly ? (
+          <p className="mt-2 text-xs leading-relaxed text-mute">
+            Preprocessed sample clip. Playback and scrubbing use static assets only; upload
+            your own reel to select and track a player.
+          </p>
+        ) : (
+          <>
+            <p className="mt-2 text-xs uppercase tracking-wide text-mute">
+              Focused player: {segment.focused_player_status.replace("_", " ")}
+            </p>
+            <p className="mt-2 text-xs text-mute">
+              Players are detected automatically when the clip opens — click a box to
+              select, then track. Scrub and re-detect any time to pick from a
+              different frame.
+            </p>
+          </>
+        )}
         {error && <p className="mt-3 text-xs text-red-500">{error}</p>}
         {frameDetections && (
           <p className="mt-3 text-xs text-mute">

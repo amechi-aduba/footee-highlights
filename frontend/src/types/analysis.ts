@@ -188,6 +188,13 @@ export interface VideoAnalysisResult {
   status: string;
   metadata: VideoMetadata;
   segments: SegmentAnalysis[];
+  demo?: {
+    id: string;
+    title: string;
+    description: string;
+    video_path: string;
+    read_only: true;
+  } | null;
   final_profile_placeholder: {
     predicted_role: string;
     confidence: string;
