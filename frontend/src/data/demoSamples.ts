@@ -14,7 +14,7 @@ export const DEMO_SAMPLES: readonly DemoSample[] = [
     subtitle: "2019 Wake Forest highlights",
     duration: "5:14",
     resultPath: "/samples/alistair-johnston/result.json",
-    posterPath: "/samples/alistair-johnston/thumbnails/seg_002.jpg",
+    posterPath: "/samples/alistair-johnston/thumbnails/seg_007.jpg",
   },
   {
     id: "jack-harrison",
@@ -22,7 +22,7 @@ export const DEMO_SAMPLES: readonly DemoSample[] = [
     subtitle: "Number 11 highlights",
     duration: "6:29",
     resultPath: "/samples/jack-harrison/result.json",
-    posterPath: "/samples/jack-harrison/thumbnails/seg_001.jpg",
+    posterPath: "/samples/jack-harrison/thumbnails/seg_013.jpg",
   },
   {
     id: "ousseni-bouda",
@@ -30,6 +30,6 @@ export const DEMO_SAMPLES: readonly DemoSample[] = [
     subtitle: "Senior year high-school highlights",
     duration: "8:47",
     resultPath: "/samples/ousseni-bouda/result.json",
-    posterPath: "/samples/ousseni-bouda/thumbnails/seg_001.jpg",
+    posterPath: "/samples/ousseni-bouda/thumbnails/seg_004.jpg",
   },
 ];

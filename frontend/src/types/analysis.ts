@@ -194,6 +194,7 @@ export interface VideoAnalysisResult {
     description: string;
     video_path: string;
     read_only: true;
+    tracking_showcase_segment_id?: string;
   } | null;
   final_profile_placeholder: {
     predicted_role: string;

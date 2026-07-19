@@ -45,7 +45,9 @@
         "central_positioning_score": null,
         "final_third_score": null,
         "ball_proximity_score": null
-      }
+      },
+      "focused_player_anchors": null,
+      "features": null
     },
     {
       "segment_id": "seg_003",
@@ -239,14 +241,996 @@
     },
     {
       "segment_id": "seg_013",
-      "start_time": 297.631,
-      "end_time": 387.387,
+      "start_time": 338.3,
+      "end_time": 340.3,
       "kind": "gameplay",
       "gameplay_score": 1.0,
       "thumbnail_path": "/samples/jack-harrison/thumbnails/seg_013.jpg",
-      "focused_player_status": "demo",
-      "focused_player_selection": null,
-      "focused_player_track": null,
+      "focused_player_status": "tracked",
+      "focused_player_selection": {
+        "detection_id": "frame_00010175_det_005",
+        "selected_at_time": 339.5,
+        "bbox": {
+          "x1": 342.48,
+          "y1": 191.85,
+          "x2": 410.56,
+          "y2": 335.7
+        },
+        "confidence": 0.8684,
+        "team_id": "team_2",
+        "jersey_color_hex": "#5b8f78",
+        "jersey_descriptor": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.26806,
+          0.83077,
+          0.48295,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.00222,
+          0.03102,
+          0.03988,
+          0.04652
+        ]
+      },
+      "focused_player_track": {
+        "status": "completed",
+        "tracker": "tracklet-stitch",
+        "engine": "tracklet",
+        "track_id": 34,
+        "start_time": 338.405,
+        "end_time": 340.207,
+        "frame_width": 640,
+        "frame_height": 360,
+        "samples": [
+          {
+            "frame_number": 10142,
+            "timestamp_seconds": 338.405,
+            "clip_time_seconds": 0.105,
+            "bbox": {
+              "x1": 223.64,
+              "y1": 275.27,
+              "x2": 305.35,
+              "y2": 360.0
+            },
+            "confidence": 0.1648,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 17,
+            "search_center": null
+          },
+          {
+            "frame_number": 10143,
+            "timestamp_seconds": 338.438,
+            "clip_time_seconds": 0.138,
+            "bbox": {
+              "x1": 214.25,
+              "y1": 275.2,
+              "x2": 310.94,
+              "y2": 359.88
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 17,
+            "search_center": null
+          },
+          {
+            "frame_number": 10144,
+            "timestamp_seconds": 338.472,
+            "clip_time_seconds": 0.172,
+            "bbox": {
+              "x1": 204.87,
+              "y1": 275.13,
+              "x2": 316.52,
+              "y2": 359.76
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 17,
+            "search_center": null
+          },
+          {
+            "frame_number": 10145,
+            "timestamp_seconds": 338.505,
+            "clip_time_seconds": 0.205,
+            "bbox": {
+              "x1": 195.48,
+              "y1": 275.06,
+              "x2": 322.1,
+              "y2": 359.64
+            },
+            "confidence": 0.2657,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 17,
+            "search_center": null
+          },
+          {
+            "frame_number": 10146,
+            "timestamp_seconds": 338.539,
+            "clip_time_seconds": 0.239,
+            "bbox": {
+              "x1": 193.6,
+              "y1": 274.16,
+              "x2": 318.59,
+              "y2": 359.67
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 17,
+            "search_center": null
+          },
+          {
+            "frame_number": 10147,
+            "timestamp_seconds": 338.572,
+            "clip_time_seconds": 0.272,
+            "bbox": {
+              "x1": 191.72,
+              "y1": 273.26,
+              "x2": 315.09,
+              "y2": 359.7
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 17,
+            "search_center": null
+          },
+          {
+            "frame_number": 10148,
+            "timestamp_seconds": 338.605,
+            "clip_time_seconds": 0.305,
+            "bbox": {
+              "x1": 189.84,
+              "y1": 272.36,
+              "x2": 311.58,
+              "y2": 359.74
+            },
+            "confidence": 0.733,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 17,
+            "search_center": null
+          },
+          {
+            "frame_number": 10149,
+            "timestamp_seconds": 338.639,
+            "clip_time_seconds": 0.339,
+            "bbox": {
+              "x1": 206.46,
+              "y1": 269.1,
+              "x2": 322.72,
+              "y2": 359.77
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10150,
+            "timestamp_seconds": 338.672,
+            "clip_time_seconds": 0.372,
+            "bbox": {
+              "x1": 223.07,
+              "y1": 265.84,
+              "x2": 333.87,
+              "y2": 359.8
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10151,
+            "timestamp_seconds": 338.705,
+            "clip_time_seconds": 0.405,
+            "bbox": {
+              "x1": 239.68,
+              "y1": 262.57,
+              "x2": 345.01,
+              "y2": 359.82
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10152,
+            "timestamp_seconds": 338.739,
+            "clip_time_seconds": 0.439,
+            "bbox": {
+              "x1": 256.3,
+              "y1": 259.31,
+              "x2": 356.15,
+              "y2": 359.85
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10153,
+            "timestamp_seconds": 338.772,
+            "clip_time_seconds": 0.472,
+            "bbox": {
+              "x1": 272.91,
+              "y1": 256.04,
+              "x2": 367.29,
+              "y2": 359.88
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10154,
+            "timestamp_seconds": 338.805,
+            "clip_time_seconds": 0.505,
+            "bbox": {
+              "x1": 289.52,
+              "y1": 252.78,
+              "x2": 378.43,
+              "y2": 359.91
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10155,
+            "timestamp_seconds": 338.839,
+            "clip_time_seconds": 0.539,
+            "bbox": {
+              "x1": 306.13,
+              "y1": 249.51,
+              "x2": 389.58,
+              "y2": 359.94
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10156,
+            "timestamp_seconds": 338.872,
+            "clip_time_seconds": 0.572,
+            "bbox": {
+              "x1": 322.75,
+              "y1": 246.25,
+              "x2": 400.72,
+              "y2": 359.97
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10157,
+            "timestamp_seconds": 338.906,
+            "clip_time_seconds": 0.606,
+            "bbox": {
+              "x1": 339.36,
+              "y1": 242.98,
+              "x2": 411.86,
+              "y2": 360.0
+            },
+            "confidence": 0.6863,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10158,
+            "timestamp_seconds": 338.939,
+            "clip_time_seconds": 0.639,
+            "bbox": {
+              "x1": 337.58,
+              "y1": 241.26,
+              "x2": 414.96,
+              "y2": 359.96
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10159,
+            "timestamp_seconds": 338.972,
+            "clip_time_seconds": 0.672,
+            "bbox": {
+              "x1": 335.8,
+              "y1": 239.54,
+              "x2": 418.05,
+              "y2": 359.92
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10160,
+            "timestamp_seconds": 339.006,
+            "clip_time_seconds": 0.706,
+            "bbox": {
+              "x1": 334.03,
+              "y1": 237.82,
+              "x2": 421.15,
+              "y2": 359.87
+            },
+            "confidence": 0.8709,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10161,
+            "timestamp_seconds": 339.039,
+            "clip_time_seconds": 0.739,
+            "bbox": {
+              "x1": 335.52,
+              "y1": 233.82,
+              "x2": 428.96,
+              "y2": 359.63
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10162,
+            "timestamp_seconds": 339.072,
+            "clip_time_seconds": 0.772,
+            "bbox": {
+              "x1": 337.01,
+              "y1": 229.83,
+              "x2": 436.77,
+              "y2": 359.38
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10163,
+            "timestamp_seconds": 339.106,
+            "clip_time_seconds": 0.806,
+            "bbox": {
+              "x1": 338.5,
+              "y1": 225.84,
+              "x2": 444.58,
+              "y2": 359.14
+            },
+            "confidence": 0.8609,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 24,
+            "search_center": null
+          },
+          {
+            "frame_number": 10164,
+            "timestamp_seconds": 339.139,
+            "clip_time_seconds": 0.839,
+            "bbox": {
+              "x1": 352.03,
+              "y1": 217.41,
+              "x2": 465.75,
+              "y2": 356.4
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10165,
+            "timestamp_seconds": 339.173,
+            "clip_time_seconds": 0.873,
+            "bbox": {
+              "x1": 365.57,
+              "y1": 208.99,
+              "x2": 486.92,
+              "y2": 353.67
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10166,
+            "timestamp_seconds": 339.206,
+            "clip_time_seconds": 0.906,
+            "bbox": {
+              "x1": 379.1,
+              "y1": 200.56,
+              "x2": 508.08,
+              "y2": 350.94
+            },
+            "confidence": 0.8899,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10167,
+            "timestamp_seconds": 339.239,
+            "clip_time_seconds": 0.939,
+            "bbox": {
+              "x1": 382.79,
+              "y1": 199.82,
+              "x2": 503.31,
+              "y2": 350.27
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10168,
+            "timestamp_seconds": 339.273,
+            "clip_time_seconds": 0.973,
+            "bbox": {
+              "x1": 386.48,
+              "y1": 199.07,
+              "x2": 498.54,
+              "y2": 349.6
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10169,
+            "timestamp_seconds": 339.306,
+            "clip_time_seconds": 1.006,
+            "bbox": {
+              "x1": 390.16,
+              "y1": 198.33,
+              "x2": 493.77,
+              "y2": 348.93
+            },
+            "confidence": 0.899,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10170,
+            "timestamp_seconds": 339.339,
+            "clip_time_seconds": 1.039,
+            "bbox": {
+              "x1": 387.46,
+              "y1": 198.21,
+              "x2": 484.35,
+              "y2": 347.88
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10171,
+            "timestamp_seconds": 339.373,
+            "clip_time_seconds": 1.073,
+            "bbox": {
+              "x1": 384.76,
+              "y1": 198.08,
+              "x2": 474.92,
+              "y2": 346.82
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10172,
+            "timestamp_seconds": 339.406,
+            "clip_time_seconds": 1.106,
+            "bbox": {
+              "x1": 382.06,
+              "y1": 197.96,
+              "x2": 465.5,
+              "y2": 345.76
+            },
+            "confidence": 0.8899,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10173,
+            "timestamp_seconds": 339.439,
+            "clip_time_seconds": 1.139,
+            "bbox": {
+              "x1": 377.62,
+              "y1": 197.09,
+              "x2": 457.26,
+              "y2": 343.71
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10174,
+            "timestamp_seconds": 339.473,
+            "clip_time_seconds": 1.173,
+            "bbox": {
+              "x1": 373.17,
+              "y1": 196.23,
+              "x2": 449.02,
+              "y2": 341.66
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10175,
+            "timestamp_seconds": 339.506,
+            "clip_time_seconds": 1.206,
+            "bbox": {
+              "x1": 368.73,
+              "y1": 195.36,
+              "x2": 440.77,
+              "y2": 339.61
+            },
+            "confidence": 0.8863,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10176,
+            "timestamp_seconds": 339.54,
+            "clip_time_seconds": 1.24,
+            "bbox": {
+              "x1": 358.66,
+              "y1": 195.72,
+              "x2": 432.2,
+              "y2": 339.69
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10177,
+            "timestamp_seconds": 339.573,
+            "clip_time_seconds": 1.273,
+            "bbox": {
+              "x1": 348.58,
+              "y1": 196.07,
+              "x2": 423.63,
+              "y2": 339.76
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10178,
+            "timestamp_seconds": 339.606,
+            "clip_time_seconds": 1.306,
+            "bbox": {
+              "x1": 338.5,
+              "y1": 196.42,
+              "x2": 415.06,
+              "y2": 339.84
+            },
+            "confidence": 0.8938,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10179,
+            "timestamp_seconds": 339.64,
+            "clip_time_seconds": 1.34,
+            "bbox": {
+              "x1": 337.0,
+              "y1": 198.7,
+              "x2": 411.12,
+              "y2": 341.57
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10180,
+            "timestamp_seconds": 339.673,
+            "clip_time_seconds": 1.373,
+            "bbox": {
+              "x1": 335.5,
+              "y1": 200.98,
+              "x2": 407.18,
+              "y2": 343.31
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10181,
+            "timestamp_seconds": 339.706,
+            "clip_time_seconds": 1.406,
+            "bbox": {
+              "x1": 334.0,
+              "y1": 203.25,
+              "x2": 403.24,
+              "y2": 345.04
+            },
+            "confidence": 0.7558,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10182,
+            "timestamp_seconds": 339.74,
+            "clip_time_seconds": 1.44,
+            "bbox": {
+              "x1": 334.08,
+              "y1": 204.64,
+              "x2": 402.73,
+              "y2": 347.0
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10183,
+            "timestamp_seconds": 339.773,
+            "clip_time_seconds": 1.473,
+            "bbox": {
+              "x1": 334.16,
+              "y1": 206.02,
+              "x2": 402.22,
+              "y2": 348.96
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10184,
+            "timestamp_seconds": 339.806,
+            "clip_time_seconds": 1.506,
+            "bbox": {
+              "x1": 334.24,
+              "y1": 207.41,
+              "x2": 401.7,
+              "y2": 350.92
+            },
+            "confidence": 0.9162,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10185,
+            "timestamp_seconds": 339.84,
+            "clip_time_seconds": 1.54,
+            "bbox": {
+              "x1": 337.55,
+              "y1": 209.87,
+              "x2": 404.13,
+              "y2": 352.15
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10186,
+            "timestamp_seconds": 339.873,
+            "clip_time_seconds": 1.573,
+            "bbox": {
+              "x1": 340.86,
+              "y1": 212.34,
+              "x2": 406.56,
+              "y2": 353.38
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10187,
+            "timestamp_seconds": 339.907,
+            "clip_time_seconds": 1.607,
+            "bbox": {
+              "x1": 344.17,
+              "y1": 214.8,
+              "x2": 408.99,
+              "y2": 354.61
+            },
+            "confidence": 0.898,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10188,
+            "timestamp_seconds": 339.94,
+            "clip_time_seconds": 1.64,
+            "bbox": {
+              "x1": 348.01,
+              "y1": 217.16,
+              "x2": 411.88,
+              "y2": 355.32
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10189,
+            "timestamp_seconds": 339.973,
+            "clip_time_seconds": 1.673,
+            "bbox": {
+              "x1": 351.86,
+              "y1": 219.51,
+              "x2": 414.77,
+              "y2": 356.02
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10190,
+            "timestamp_seconds": 340.007,
+            "clip_time_seconds": 1.707,
+            "bbox": {
+              "x1": 355.7,
+              "y1": 221.86,
+              "x2": 417.66,
+              "y2": 356.72
+            },
+            "confidence": 0.8607,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 34,
+            "search_center": null
+          },
+          {
+            "frame_number": 10191,
+            "timestamp_seconds": 340.04,
+            "clip_time_seconds": 1.74,
+            "bbox": {
+              "x1": 356.74,
+              "y1": 224.89,
+              "x2": 425.81,
+              "y2": 357.61
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 55,
+            "search_center": null
+          },
+          {
+            "frame_number": 10192,
+            "timestamp_seconds": 340.073,
+            "clip_time_seconds": 1.773,
+            "bbox": {
+              "x1": 357.77,
+              "y1": 227.91,
+              "x2": 433.96,
+              "y2": 358.51
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 55,
+            "search_center": null
+          },
+          {
+            "frame_number": 10193,
+            "timestamp_seconds": 340.107,
+            "clip_time_seconds": 1.807,
+            "bbox": {
+              "x1": 358.81,
+              "y1": 230.94,
+              "x2": 442.11,
+              "y2": 359.4
+            },
+            "confidence": 0.889,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 55,
+            "search_center": null
+          },
+          {
+            "frame_number": 10194,
+            "timestamp_seconds": 340.14,
+            "clip_time_seconds": 1.84,
+            "bbox": {
+              "x1": 357.46,
+              "y1": 230.58,
+              "x2": 440.48,
+              "y2": 358.64
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 55,
+            "search_center": null
+          },
+          {
+            "frame_number": 10195,
+            "timestamp_seconds": 340.174,
+            "clip_time_seconds": 1.874,
+            "bbox": {
+              "x1": 356.12,
+              "y1": 230.22,
+              "x2": 438.85,
+              "y2": 357.89
+            },
+            "confidence": 0.0,
+            "state": "interpolated",
+            "predicted": true,
+            "tracklet_id": 55,
+            "search_center": null
+          },
+          {
+            "frame_number": 10196,
+            "timestamp_seconds": 340.207,
+            "clip_time_seconds": 1.907,
+            "bbox": {
+              "x1": 354.78,
+              "y1": 229.86,
+              "x2": 437.23,
+              "y2": 357.13
+            },
+            "confidence": 0.9191,
+            "state": "tracked",
+            "predicted": false,
+            "tracklet_id": 55,
+            "search_center": null
+          }
+        ],
+        "source_frames": 60,
+        "inference_frames": 20,
+        "frame_stride": 3,
+        "processing_seconds": 4.295,
+        "metrics": {
+          "detection_cache_hit": false,
+          "tracklet_count": 18,
+          "stitched_tracklet_count": 4,
+          "anchor_tracklet_id": 34,
+          "anchor_tracklet_length": 9,
+          "anchor_count": 1,
+          "coverage": 0.85,
+          "recovered_samples": 0,
+          "interpolated_fraction": 0.691,
+          "searching_fraction": 0.0,
+          "gap_count": 3,
+          "longest_gap_frames": 9,
+          "stitch_decisions": [
+            {
+              "from": 34,
+              "to": 55,
+              "gap": 3,
+              "position_cost": 0.009,
+              "implied_speed": 1.24,
+              "appearance": 0.988,
+              "team_cost": 0.0,
+              "cost": 0.051,
+              "accepted": true
+            },
+            {
+              "from": 24,
+              "to": 34,
+              "gap": 3,
+              "position_cost": 0.172,
+              "implied_speed": 3.13,
+              "appearance": 0.943,
+              "team_cost": 0.0,
+              "cost": 0.081,
+              "accepted": true
+            },
+            {
+              "from": 17,
+              "to": 24,
+              "gap": 9,
+              "position_cost": 0.587,
+              "implied_speed": 4.32,
+              "appearance": 0.91,
+              "team_cost": 0.0,
+              "cost": 0.261,
+              "accepted": true
+            }
+          ]
+        }
+      },
       "object_detection_summary": null,
       "detected_actions_placeholder": [],
       "features_placeholder": {
@@ -254,6 +1238,57 @@
         "central_positioning_score": null,
         "final_third_score": null,
         "ball_proximity_score": null
+      },
+      "focused_player_anchors": [
+        {
+          "detection_id": "frame_00010175_det_005",
+          "selected_at_time": 339.5,
+          "bbox": {
+            "x1": 342.48,
+            "y1": 191.85,
+            "x2": 410.56,
+            "y2": 335.7
+          },
+          "confidence": 0.8684,
+          "team_id": "team_2",
+          "jersey_color_hex": "#5b8f78",
+          "jersey_descriptor": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.26806,
+            0.83077,
+            0.48295,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.00222,
+            0.03102,
+            0.03988,
+            0.04652
+          ]
+        }
+      ],
+      "features": {
+        "segment_id": "seg_013",
+        "seconds_tracked": 1.8,
+        "distance_heights": 3.2,
+        "sprint_count": 0,
+        "ball_near_events": 1,
+        "wideness": 0.381,
+        "ball_data_available": true,
+        "ball_events_enabled": false
       }
     },
     {
@@ -286,6 +1321,7 @@
     "title": "Jack Harrison",
     "description": "A preprocessed version of the number 11 highlight reel.",
     "video_path": "/samples/jack-harrison/video.mp4",
-    "read_only": true
+    "read_only": true,
+    "tracking_showcase_segment_id": "seg_013"
   }
 }

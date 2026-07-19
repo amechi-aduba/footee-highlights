@@ -97,7 +97,7 @@ export function SegmentCard({
    * once per gap so resuming playback doesn't immediately re-pause. */
   function maybePauseAtLostMoment(clipTime: number) {
     const video = videoRef.current;
-    if (!video || video.paused || !focusedTrack || anchorAdded) return;
+    if (readOnly || !video || video.paused || !focusedTrack || anchorAdded) return;
     const samples = focusedTrack.samples;
     if (samples.length === 0) return;
 
@@ -224,6 +224,13 @@ export function SegmentCard({
     activeTrackSample?.state ?? (activeTrackSample?.predicted ? "interpolated" : "tracked");
   const isActiveSampleNearby =
     activeTrackSample != null && Math.abs(activeTrackSample.clip_time_seconds - currentTime) < 0.5;
+  const visibleTrackPercent = focusedTrack
+    ? Math.round(
+        (focusedTrack.samples.filter((sample) => sample.bbox != null).length /
+          Math.max(1, focusedTrack.source_frames ?? focusedTrack.samples.length)) *
+          100,
+      )
+    : 0;
 
   // Where did tracking lose the player? First "searching" run, or an early end.
   const firstLostTime = (() => {
@@ -290,6 +297,11 @@ export function SegmentCard({
           }}
           onTimeUpdate={handleTimeUpdate}
         />
+        {readOnly && focusedTrack && (
+          <span className="pointer-events-none absolute left-3 top-3 rounded-md bg-emerald-500/90 px-2.5 py-1 text-[11px] font-bold text-white shadow-card">
+            Cached player track
+          </span>
+        )}
         {frameDetections && visibleDetections.map((detection) => {
           const { bbox } = detection;
           const isSelectable = detection.role === "player" || detection.role === "goalkeeper";
@@ -463,8 +475,9 @@ export function SegmentCard({
         </div>
         {readOnly ? (
           <p className="mt-2 text-xs leading-relaxed text-mute">
-            Preprocessed sample clip. Playback and scrubbing use static assets only; upload
-            your own reel to select and track a player.
+            {focusedTrack
+              ? "Tracking showcase: press Play to see the cached spotlight follow the featured player. No live model or backend request is used."
+              : "Preprocessed sample clip. Playback and scrubbing use static assets only; open the green Tracked clip to try the tracking showcase."}
           </p>
         ) : (
           <>
@@ -484,20 +497,27 @@ export function SegmentCard({
             Found {frameDetections.detections.length} objects on this frame. Showing {visibleDetections.length}.
           </p>
         )}
-        {focusedPlayerId && (
+        {!readOnly && focusedPlayerId && (
           <p className="mt-3 text-xs font-semibold text-emerald-500">
             Player selected — hit “Track selected player” to follow them.
           </p>
         )}
         {focusedTrack && (
           <p className="mt-3 text-xs font-semibold text-primary">
-            {focusedTrack.engine === "tracklet" ? "Tracklet engine" : "ByteTrack"} followed this
-            player across {focusedTrack.samples.length} frames
-            {focusedTrack.processing_seconds != null
+            {readOnly
+              ? "Precomputed track"
+              : focusedTrack.engine === "tracklet"
+                ? "Tracklet engine"
+                : "ByteTrack"} followed this player across {focusedTrack.samples.length} sampled frames
+            {!readOnly && focusedTrack.processing_seconds != null
               ? ` in ${focusedTrack.processing_seconds.toFixed(1)} seconds.`
               : "."}
-            {focusedTrack.metrics?.coverage != null &&
-              ` Coverage ${Math.round((focusedTrack.metrics.coverage as number) * 100)}%.`}
+            {readOnly
+              ? ` Visible overlay ${Math.min(100, visibleTrackPercent)}%.`
+              : focusedTrack.metrics?.coverage != null &&
+                ` Coverage ${Math.round(
+                  Math.min(1, Math.max(0, focusedTrack.metrics.coverage as number)) * 100,
+                )}%.`}
             {typeof focusedTrack.metrics?.anchor_count === "number" &&
               (focusedTrack.metrics.anchor_count as number) > 1 &&
               ` ${focusedTrack.metrics.anchor_count as number} anchors.`}
@@ -509,7 +529,7 @@ export function SegmentCard({
             anchors — it uses cached detections, so it only takes a moment.
           </p>
         )}
-        {focusedTrack && !anchorAdded && (lostAtTime ?? firstLostTime) != null && (
+        {!readOnly && focusedTrack && !anchorAdded && (lostAtTime ?? firstLostTime) != null && (
           <div className="mt-2 flex items-center gap-2 rounded-lg border border-accent/30 bg-accent/10 p-2.5">
             <p className="flex-1 text-xs text-accent">
               {lostAtTime != null ? (

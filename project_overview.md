@@ -45,16 +45,18 @@ footedness before profile generation.
 Visitors who do not have a highlight reel ready can open one of three bundled
 examples: Alistair Johnston, Jack Harrison, or Ousseni Bouda. Each
 reel was split and classified once on the local development machine. Vercel
-serves the resulting video, thumbnails, and JSON directly, so opening or
-scrubbing a sample does not wake Azure Container Apps or run TransNetV2, YOLO,
-tracking, or profile inference.
+serves the resulting video, thumbnails, JSON, and one reviewed player track per
+reel directly. Opening or scrubbing a sample does not wake Azure Container Apps
+or run TransNetV2, YOLO, tracking, or profile inference at request time.
 
-The sample view is intentionally read-only. It demonstrates scene splitting,
+The sample view is intentionally read-only but no longer hides the product's
+core feature. Its featured clip opens automatically and plays a cached tracking
+spotlight plus precomputed clip statistics. It also demonstrates scene splitting,
 cutaway organization, metadata, clip navigation, playback, and scrubbing. A
-user uploads their own reel when they want live player detection, tracking, and
-profile generation. The three static sample packages remain below Vercel's
-Hobby static-upload limit; this
-avoids backend compute but still uses ordinary frontend/CDN bandwidth.
+user uploads their own reel when they want to select a different player, add
+identity anchors, run new tracking, or generate a profile. The three static
+sample packages remain below Vercel's Hobby static-upload limit. This avoids
+backend compute but still uses ordinary frontend/CDN bandwidth.
 
 ### 1. Upload a reel
 
@@ -217,9 +219,10 @@ production it points to the Azure Container Apps HTTPS endpoint; in local
 development it defaults to `http://localhost:8000`.
 
 The instant-demo catalog loads `frontend/public/samples/<sample-id>/result.json`
-and uses the accompanying MP4 and thumbnails directly. Demo IDs are never sent
-to the backend, page-exit cleanup is not registered for them, and controls that
-would invoke detection or tracking are hidden.
+and uses the accompanying MP4, thumbnails, and embedded tracking samples directly.
+Demo IDs are never sent to the backend, page-exit cleanup is not registered for
+them, and controls that would invoke new detection or tracking are hidden. The
+cached overlay uses the same `SegmentCard` playback path as a live tracking result.
 
 ### Backend
 
@@ -356,10 +359,11 @@ VITE_API_BASE_URL=https://footee-vision-api.mangoplant-7b9bb2f4.eastus.azurecont
 Because Vite substitutes this value during the build, changing it requires a new
 Vercel deployment.
 
-Vercel also hosts the preprocessed sample MP4 files, thumbnails, and JSON. This
-keeps sample use away from the Azure API and prevents demo traffic from spending
-inference CPU. It does not eliminate static bandwidth or repository/deployment
-size, so sample asset usage should still be monitored.
+Vercel also hosts the preprocessed sample MP4 files, thumbnails, and JSON with
+reviewed track coordinates and clip statistics. This keeps sample use away from
+the Azure API and prevents demo traffic from spending inference CPU. It does not
+eliminate static bandwidth or repository/deployment size, so sample asset usage
+should still be monitored.
 
 ### Backend: Azure Container Apps
 
@@ -537,7 +541,7 @@ The most valuable next improvements are:
 ```text
 footee-highlights/
 ├── frontend/
-│   ├── public/samples/           Static sample videos, thumbnails, and results
+│   ├── public/samples/           Static videos, thumbnails, results, and cached tracks
 │   └── src/
 │       ├── api/                 Backend client
 │       ├── components/          Upload, processing, clips, tracking, profile UI
@@ -552,7 +556,8 @@ footee-highlights/
 │   │   └── services/            Vision, tracking, storage, and analysis pipeline
 │   ├── models/                  Optional local football and ReID checkpoints
 │   ├── scripts/                 Dataset, model, and demo tooling
-│   │   └── build_demo_samples.py  Rebuilds static samples locally
+│   │   ├── build_demo_samples.py  Rebuilds static samples locally
+│   │   └── build_demo_tracks.py   Embeds reviewed tracking showcases locally
 │   └── storage/                 Local temporary development artifacts
 ├── Dockerfile                   CPU production backend image
 ├── deploy-azure.ps1             Azure build and deployment automation
@@ -570,5 +575,6 @@ components can communicate; it does not replace accuracy evaluation on a broad,
 reviewed football dataset.
 
 The three demo packages have also been validated locally: each result JSON points
-to an existing video and thumbnail set, representative thumbnails decode
-successfully, and the sample library is included in the production Vite build.
+to an existing video and thumbnail set, each package contains one reviewed
+precomputed player track, representative thumbnails decode successfully, and the
+sample library is included in the production Vite build.

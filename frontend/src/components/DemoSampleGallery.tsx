@@ -22,9 +22,9 @@ export function DemoSampleGallery({
             <h2 className="text-lg font-bold tracking-tight">No reel ready?</h2>
           </div>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-mute">
-            Open a preprocessed reel to explore scene splitting and clip review. These samples
-            are served as static files, so they do not upload anything or run the analysis
-            backend.
+            Open a preprocessed reel to explore scene splitting, clip review, and a featured
+            player-tracking showcase. The saved tracks are served as static files, so the demos
+            do not upload anything or run the analysis backend.
           </p>
         </div>
         <span className="whitespace-nowrap text-xs font-semibold text-mute">
@@ -32,7 +32,7 @@ export function DemoSampleGallery({
         </span>
       </div>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {samples.map((sample) => {
           const isActive = activeSampleId === sample.id;
           const isLoading = loadingSampleId === sample.id;
@@ -68,6 +68,9 @@ export function DemoSampleGallery({
                 <span className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-primary">
                   {isLoading && <span className="spinner" />}
                   {isLoading ? "Loading demo…" : isActive ? "Demo open" : "Open demo"}
+                </span>
+                <span className="ml-2 mt-3 inline-flex text-[10px] font-bold uppercase tracking-wide text-emerald-500">
+                  Tracking included
                 </span>
               </div>
             </button>

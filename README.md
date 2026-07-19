@@ -5,7 +5,8 @@ player highlight reel into reviewable clips and a first-stage movement profile.
 Users can upload a reel, split it into scenes, remove likely cutaways, select and
 track a player, and receive an archetype with similar-player film suggestions.
 Three preprocessed sample reels are also included for visitors who do not have a
-video ready; opening a sample uses static Vercel assets and no Azure inference.
+video ready. Each includes a reviewed, precomputed player-tracking showcase;
+opening one uses static Vercel assets and no Azure inference.
 
 - [Open the live app](https://footee-highlights.vercel.app/)
 - [Check the live API](https://footee-vision-api.mangoplant-7b9bb2f4.eastus.azurecontainerapps.io/health)
@@ -13,8 +14,8 @@ video ready; opening a sample uses static Vercel assets and no Azure inference.
 
 ## Current workflow
 
-1. Open one of three instant sample reels for read-only clip review, or upload a
-   soccer highlight video for the full workflow.
+1. Open one of three instant sample reels for clip review and a cached tracking
+   showcase, or upload a soccer highlight video for the full interactive workflow.
 2. For a new upload, start scene detection and follow live progress for TransNetV2 cuts, cutaway
    filtering, and thumbnail generation.
 3. Review the gameplay clips, detect players in a frame, and select the player
@@ -39,7 +40,7 @@ video ready; opening a sample uses static Vercel assets and no Azure inference.
 ```text
 footee-highlights/
   frontend/              React application, API client, and static demos
-    public/samples/      Three preprocessed read-only sample reels
+    public/samples/      Three preprocessed reels with cached tracking showcases
   backend/               FastAPI routes and computer-vision pipeline
   Dockerfile             Production backend image
   deploy-azure.ps1       Azure build and deployment script
@@ -99,9 +100,10 @@ abandoned data after one hour by default. Azure uses ephemeral `/tmp` storage;
 the project does not provide permanent user video storage.
 
 The three bundled sample reels are the explicit exception: they are public,
-persistent demo assets rather than user uploads. Only publish sample footage
-that you have permission to distribute. Static demos avoid backend compute, but
-serving video still uses normal frontend hosting bandwidth.
+persistent demo assets rather than user uploads. Their reviewed tracking
+coordinates and clip statistics are also bundled as static JSON. Only publish
+sample footage that you have permission to distribute. Static demos avoid
+backend compute, but serving video still uses normal frontend hosting bandwidth.
 
 Footee Vision is an early-stage development aid, not a definitive scouting or
 performance assessment. Scene boundaries can be imperfect, player tracking can

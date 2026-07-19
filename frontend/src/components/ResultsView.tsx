@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../api/client";
 import type { VideoAnalysisResult } from "../types/analysis";
 import { clipLabel } from "../utils/video";
@@ -27,6 +27,12 @@ export function ResultsView({ result }: { result: VideoAnalysisResult }) {
   const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null);
   const [statusOverrides, setStatusOverrides] = useState<Record<string, string>>({});
   const [showCutaways, setShowCutaways] = useState(false);
+
+  useEffect(() => {
+    setActiveSegmentId(result.demo?.tracking_showcase_segment_id ?? null);
+    setStatusOverrides({});
+    setShowCutaways(false);
+  }, [result.video_id, result.demo?.tracking_showcase_segment_id]);
 
   const activeSegment =
     result.segments.find((segment) => segment.segment_id === activeSegmentId) ?? null;
@@ -110,14 +116,26 @@ export function ResultsView({ result }: { result: VideoAnalysisResult }) {
       {demo ? (
         <div className="animate-fade-up rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="chip bg-emerald-500/20 text-emerald-500">Static demo</span>
+            <span className="chip bg-emerald-500/20 text-emerald-500">Cached tracking demo</span>
             <h2 className="text-lg font-bold tracking-tight">{demo.title}</h2>
           </div>
           <p className="mt-2 text-sm leading-relaxed text-mute">{demo.description}</p>
-          <p className="mt-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-            Clip playback and thumbnails come from Vercel. This view does not wake Azure or
-            run detection, tracking, or profile inference.
-          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <p className="max-w-2xl text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+              Press Play on the featured clip to see a real, precomputed player track. The
+              video, thumbnails, tracking coordinates, and clip statistics come from Vercel,
+              so this view does not wake Azure or run new inference.
+            </p>
+            {demo.tracking_showcase_segment_id && (
+              <button
+                className="btn-primary btn-sm whitespace-nowrap"
+                type="button"
+                onClick={() => setActiveSegmentId(demo.tracking_showcase_segment_id ?? null)}
+              >
+                Open tracking showcase
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         <PlayerProfilePanel
@@ -143,7 +161,7 @@ export function ResultsView({ result }: { result: VideoAnalysisResult }) {
             <span className="text-sm font-bold">{clipLabel(activeSegment.segment_id)}</span>
           </div>
           <SegmentCard
-            key={activeSegment.segment_id}
+            key={`${result.video_id}:${activeSegment.segment_id}`}
             segment={activeSegment}
             videoId={result.video_id}
             videoUrl={demo?.video_path}
@@ -169,12 +187,14 @@ export function ResultsView({ result }: { result: VideoAnalysisResult }) {
             </span>
           </h2>
           <span className="text-xs font-semibold text-mute">
-            {demo ? "Zero analysis compute" : `${trackedCount}/${gameplaySegments.length} tracked`}
+            {demo
+              ? `${trackedCount} cached tracking showcase${trackedCount === 1 ? "" : "s"}`
+              : `${trackedCount}/${gameplaySegments.length} tracked`}
           </span>
         </div>
         <p className="mb-4 text-sm text-mute">
           {demo
-            ? "Open a clip to play or scrub the cached sample. Upload your own reel for live player detection and tracking."
+            ? "The tracked clip is marked in green and opens automatically. Play it to see the player spotlight move; the other clips remain available for film review."
             : "Open a clip to detect players, pick yourself, and verify the tracking."}
         </p>
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
